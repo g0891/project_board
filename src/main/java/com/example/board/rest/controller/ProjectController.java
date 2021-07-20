@@ -1,8 +1,11 @@
 package com.example.board.rest.controller;
 
+import com.example.board.rest.dto.IdDTO;
 import com.example.board.rest.dto.project.ProjectCreateDTO;
 import com.example.board.rest.dto.project.ProjectReadDTO;
 import com.example.board.rest.dto.project.ProjectStatus;
+import com.example.board.rest.dto.project.ProjectUpdateDTO;
+import com.example.board.rest.dto.release.ReleaseUpdateDTO;
 import com.example.board.rest.errorController.exception.IncorrectIdException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,14 +34,21 @@ public class ProjectController {
     public ResponseEntity<ProjectReadDTO> getProject(@PathVariable @Parameter(description = "Идентификатор проекта") int id) throws Exception {
         if (id <= 0) throw new IncorrectIdException();
         ProjectReadDTO p1 = new ProjectReadDTO(id, "project 1", "p1 description", 123, ProjectStatus.OPEN);
-        return ResponseEntity.ok().body(p1);
+        return ResponseEntity.ok(p1);
     }
 
 
     @PostMapping(path = "")
     @Operation(summary = "Создать проект", description = "Позволяет создать новый проект")
-    public ResponseEntity<ProjectReadDTO> newProject(@RequestBody @Parameter(description = "Описание нового проекта") ProjectCreateDTO project) {
-        return ResponseEntity.ok().body(new ProjectReadDTO(project, 777));
+    public ResponseEntity<IdDTO> newProject(@RequestBody @Parameter(description = "Описание нового проекта") ProjectCreateDTO project) {
+        return ResponseEntity.ok().body(new IdDTO(88));
+    }
+
+    @PutMapping(path = "/{id}")
+    @Operation(summary = "Обновить проект", description = "Позволяет обновить данные по проекту")
+    public ResponseEntity updateProject(@PathVariable @Parameter(description = "Идентификатор проекта") int id, @RequestBody @Parameter(description = "Описание обновления проекта") ProjectUpdateDTO project) throws Exception {
+        if (id <= 0) throw new IncorrectIdException();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")

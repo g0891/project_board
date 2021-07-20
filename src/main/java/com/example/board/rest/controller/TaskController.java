@@ -1,8 +1,11 @@
 package com.example.board.rest.controller;
 
+import com.example.board.rest.dto.IdDTO;
+import com.example.board.rest.dto.person.PersonUpdateDTO;
 import com.example.board.rest.dto.task.TaskCreateDTO;
 import com.example.board.rest.dto.task.TaskReadDTO;
 import com.example.board.rest.dto.task.TaskStatus;
+import com.example.board.rest.dto.task.TaskUpdateDTO;
 import com.example.board.rest.errorController.exception.IncorrectIdException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,8 +43,15 @@ public class TaskController {
 
     @PostMapping(path = "")
     @Operation(summary = "Создать задачу", description = "Позволяет создать новую задачу")
-    public ResponseEntity<TaskReadDTO> newTask(@RequestBody @Parameter(description = "Описание новой задачи") TaskCreateDTO task) {
-        return ResponseEntity.ok(new TaskReadDTO(1, task));
+    public ResponseEntity<IdDTO> newTask(@RequestBody @Parameter(description = "Описание новой задачи") TaskCreateDTO task) {
+        return ResponseEntity.ok().body(new IdDTO(99));
+    }
+
+    @PutMapping(path = "/{id}")
+    @Operation(summary = "Обновить данные задачи", description = "Позволяет обновить данные по задаче")
+    public ResponseEntity updateTask(@PathVariable @Parameter(description = "Идентификатор задачи") int id, @RequestBody @Parameter(description = "Описание обновления данных задачи") TaskUpdateDTO task) throws Exception {
+        if (id <= 0) throw new IncorrectIdException();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(path = "/{id}")

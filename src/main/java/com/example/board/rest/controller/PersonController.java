@@ -1,8 +1,11 @@
 package com.example.board.rest.controller;
 
+import com.example.board.rest.dto.IdDTO;
 import com.example.board.rest.dto.person.PersonCreateDTO;
 import com.example.board.rest.dto.person.PersonReadDTO;
 import com.example.board.rest.dto.person.PersonRole;
+import com.example.board.rest.dto.person.PersonUpdateDTO;
+import com.example.board.rest.dto.release.ReleaseUpdateDTO;
 import com.example.board.rest.errorController.exception.IncorrectIdException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,8 +38,15 @@ public class PersonController {
 
     @PostMapping(path = "")
     @Operation(summary = "Создать пользователя", description = "Позволяет создать нового пользователя")
-    public ResponseEntity<PersonReadDTO> newPerson(@RequestBody @Parameter(description = "Описание нового пользователя") PersonCreateDTO person) {
-        return ResponseEntity.ok().body(new PersonReadDTO(888, person));
+    public ResponseEntity<IdDTO> newPerson(@RequestBody @Parameter(description = "Описание нового пользователя") PersonCreateDTO person) {
+        return ResponseEntity.ok().body(new IdDTO(99));
+    }
+
+    @PutMapping(path = "/{id}")
+    @Operation(summary = "Обновить данные пользователя", description = "Позволяет обновить данные пользователя")
+    public ResponseEntity updatePerson(@PathVariable @Parameter(description = "Идентификатор пользователя") int id, @RequestBody @Parameter(description = "Описание обновления данных пользователя") PersonUpdateDTO person) throws Exception {
+        if (id <= 0) throw new IncorrectIdException();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(path = "/{id}")

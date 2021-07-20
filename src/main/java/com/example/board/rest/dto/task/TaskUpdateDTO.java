@@ -4,10 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "Описание задачи для ответов")
-public class TaskReadDTO {
-    @Schema(description = "Идентификатор задачи")
-    private int id;
+@Schema(description = "Описание задачи для обновления")
+public class TaskUpdateDTO {
     @Schema(description = "Название задачи")
     private String name;
     @Schema(description = "Описание задачи")
@@ -20,29 +18,14 @@ public class TaskReadDTO {
     private int executorId;
     @Schema(description = "Идентификатор релиза")
     private int releaseId;
-    @Schema(description = "Дата создания")
-    private LocalDateTime createdOn;
-    @Schema(description = "Дата завершения")
-    private LocalDateTime doneOn;
 
-    public TaskReadDTO(int id, String name, String description, TaskStatus status, int authorId, int executorId, int releaseId, LocalDateTime createdOn, LocalDateTime doneOn) {
-        this.id = id;
+    public TaskUpdateDTO(String name, String description, TaskStatus status, int authorId, int executorId, int releaseId) {
         this.name = name;
         this.description = description;
         this.status = status;
         this.authorId = authorId;
         this.executorId = executorId;
         this.releaseId = releaseId;
-        this.createdOn = createdOn;
-        this.doneOn = doneOn;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -91,21 +74,5 @@ public class TaskReadDTO {
 
     public void setReleaseId(int releaseId) {
         this.releaseId = releaseId;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
-    }
-
-    public LocalDateTime getDoneOn() {
-        return doneOn;
-    }
-
-    public void setDoneOn(LocalDateTime doneOn) {
-        this.doneOn = doneOn;
     }
 }

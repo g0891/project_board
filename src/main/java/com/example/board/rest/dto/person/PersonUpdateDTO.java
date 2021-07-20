@@ -4,27 +4,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
-@Schema(description = "Описание пользователя для ответов")
-public class PersonReadDTO {
-    @Schema(description = "Идентификатор пользователя")
-    private int id;
+@Schema(description = "Описание пользователя для обновления")
+public class PersonUpdateDTO {
     @Schema(description = "Имя пользователя")
     private String name;
     @Schema(description = "Список ролей пользователя пользователя")
     private List<PersonRole> roles;
 
-    public PersonReadDTO(int id, String name, List<PersonRole> roles) {
-        this.id = id;
+    public PersonUpdateDTO(String name, List<PersonRole> roles) {
         this.name = name;
         this.roles = roles;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

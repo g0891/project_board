@@ -28,15 +28,6 @@ public class ReleaseReadDTO {
             this.releasedOn = releasedOn;
         }
 
-        public ReleaseReadDTO(int id, ReleaseCreateDTO release) {
-            this.id = id;
-            this.version = release.getVersion();
-            this.projectId = release.getProjectId();
-            this.status = ReleaseStatus.OPEN;
-            this.createdOn = LocalDateTime.now();
-            this.releasedOn = null;
-        }
-
         public int getId() {
             return id;
         }

@@ -1,8 +1,10 @@
 package com.example.board.rest.controller;
 
+import com.example.board.rest.dto.IdDTO;
 import com.example.board.rest.dto.release.ReleaseCreateDTO;
 import com.example.board.rest.dto.release.ReleaseReadDTO;
 import com.example.board.rest.dto.release.ReleaseStatus;
+import com.example.board.rest.dto.release.ReleaseUpdateDTO;
 import com.example.board.rest.errorController.exception.IncorrectIdException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,15 +37,21 @@ public class ReleaseController {
     public ResponseEntity<ReleaseReadDTO> getRelease(@PathVariable @Parameter(description = "Идентификатор релиза") int id) throws Exception{
         if (id <= 0) throw new IncorrectIdException();
         ReleaseReadDTO resp =
-                new ReleaseReadDTO(1, "7.0", 21, ReleaseStatus.OPEN, LocalDateTime.now(), null);
-        return ResponseEntity.ok().body(resp);
+                new ReleaseReadDTO(id, "7.0", 21, ReleaseStatus.OPEN, LocalDateTime.now(), null);
+        return ResponseEntity.ok(resp);
     }
 
     @PostMapping(path = "")
     @Operation(summary = "Создать релиз", description = "Позволяет создать новый релиз")
-    public ResponseEntity<ReleaseReadDTO> newRelease(@RequestBody @Parameter(description = "Описание нового релиза") ReleaseCreateDTO release) {
-        ReleaseReadDTO r1 = new ReleaseReadDTO(555, release);
-        return ResponseEntity.ok().body(r1);
+    public ResponseEntity<IdDTO> newRelease(@RequestBody @Parameter(description = "Описание нового релиза") ReleaseCreateDTO release) {
+        return ResponseEntity.ok(new IdDTO(55));
+    }
+
+    @PutMapping(path = "/{id}")
+    @Operation(summary = "Обновить релиз", description = "Позволяет обновить данные по релизу")
+    public ResponseEntity updateRelease(@PathVariable @Parameter(description = "Идентификатор релиза") int id, @RequestBody @Parameter(description = "Описание обновления релиза") ReleaseUpdateDTO release) throws Exception {
+        if (id <= 0) throw new IncorrectIdException();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(path = "/{id}")
