@@ -3,7 +3,7 @@ package com.example.board.rest.dto.project;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Описание проекта для создания")
-public class ProjectCreateDTO {
+public class ProjectCreateDto {
     @Schema(description = "Название проекта")
     private String name;
     @Schema(description = "Описание проекта")

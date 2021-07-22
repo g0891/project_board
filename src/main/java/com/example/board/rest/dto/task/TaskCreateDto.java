@@ -3,17 +3,17 @@ package com.example.board.rest.dto.task;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Описание задачи для создания")
-public class TaskCreateDTO {
+public class TaskCreateDto {
     @Schema(description = "Название задачи")
     private String name;
     @Schema(description = "Описание задачи")
     private String description;
     @Schema(description = "Автор")
-    private int authorId;
+    private long authorId;
     @Schema(description = "Исполнитель")
-    private int executorId;
+    private long executorId;
     @Schema(description = "Идентификатор релиза")
-    private int releaseId;
+    private long releaseId;
 
     public String getName() {
         return name;
@@ -31,27 +31,27 @@ public class TaskCreateDTO {
         this.description = description;
     }
 
-    public int getAuthorId() {
+    public long getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setAuthorId(long authorId) {
         this.authorId = authorId;
     }
 
-    public int getExecutorId() {
+    public long getExecutorId() {
         return executorId;
     }
 
-    public void setExecutorId(int executorId) {
+    public void setExecutorId(long executorId) {
         this.executorId = executorId;
     }
 
-    public int getReleaseId() {
+    public long getReleaseId() {
         return releaseId;
     }
 
-    public void setReleaseId(int releaseId) {
+    public void setReleaseId(long releaseId) {
         this.releaseId = releaseId;
     }
 }

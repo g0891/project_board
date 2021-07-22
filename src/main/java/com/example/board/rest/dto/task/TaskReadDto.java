@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "Описание задачи для обновления")
-public class TaskUpdateDTO {
+@Schema(description = "Описание задачи для ответов")
+public class TaskReadDto {
+    @Schema(description = "Идентификатор задачи")
+    private long id;
     @Schema(description = "Название задачи")
     private String name;
     @Schema(description = "Описание задачи")
@@ -13,19 +15,34 @@ public class TaskUpdateDTO {
     @Schema(description = "Статус задачи")
     private TaskStatus status;
     @Schema(description = "Автор")
-    private int authorId;
+    private long authorId;
     @Schema(description = "Исполнитель")
-    private int executorId;
+    private long executorId;
     @Schema(description = "Идентификатор релиза")
-    private int releaseId;
+    private long releaseId;
+    @Schema(description = "Дата создания")
+    private LocalDateTime createdOn;
+    @Schema(description = "Дата завершения")
+    private LocalDateTime doneOn;
 
-    public TaskUpdateDTO(String name, String description, TaskStatus status, int authorId, int executorId, int releaseId) {
+    public TaskReadDto(long id, String name, String description, TaskStatus status, long authorId, long executorId, long releaseId, LocalDateTime createdOn, LocalDateTime doneOn) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
         this.authorId = authorId;
         this.executorId = executorId;
         this.releaseId = releaseId;
+        this.createdOn = createdOn;
+        this.doneOn = doneOn;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -52,27 +69,43 @@ public class TaskUpdateDTO {
         this.status = status;
     }
 
-    public int getAuthorId() {
+    public long getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setAuthorId(long authorId) {
         this.authorId = authorId;
     }
 
-    public int getExecutorId() {
+    public long getExecutorId() {
         return executorId;
     }
 
-    public void setExecutorId(int executorId) {
+    public void setExecutorId(long executorId) {
         this.executorId = executorId;
     }
 
-    public int getReleaseId() {
+    public long getReleaseId() {
         return releaseId;
     }
 
-    public void setReleaseId(int releaseId) {
+    public void setReleaseId(long releaseId) {
         this.releaseId = releaseId;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public LocalDateTime getDoneOn() {
+        return doneOn;
+    }
+
+    public void setDoneOn(LocalDateTime doneOn) {
+        this.doneOn = doneOn;
     }
 }

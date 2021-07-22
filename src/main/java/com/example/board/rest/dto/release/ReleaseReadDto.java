@@ -5,13 +5,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 
 @Schema(description = "Описание релиза для ответов")
-public class ReleaseReadDTO {
+public class ReleaseReadDto {
         @Schema(description = "Идентификатор релиза")
-        private int id;
+        private long id;
         @Schema(description = "Версия релиза")
         private String version;
         @Schema(description = "Идентификатор проекта")
-        private int projectId;
+        private long projectId;
         @Schema(description = "Статус релиза")
         private ReleaseStatus status;
         @Schema(description = "Дата создания релиза")
@@ -19,7 +19,7 @@ public class ReleaseReadDTO {
         @Schema(description = "Дата выпуска релиза")
         private LocalDateTime releasedOn;
 
-        public ReleaseReadDTO(int id, String version, int projectId, ReleaseStatus status, LocalDateTime createdOn, LocalDateTime releasedOn) {
+        public ReleaseReadDto(long id, String version, long projectId, ReleaseStatus status, LocalDateTime createdOn, LocalDateTime releasedOn) {
             this.id = id;
             this.version = version;
             this.projectId = projectId;
@@ -28,11 +28,11 @@ public class ReleaseReadDTO {
             this.releasedOn = releasedOn;
         }
 
-        public int getId() {
+        public long getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(long id) {
             this.id = id;
         }
 
@@ -44,11 +44,11 @@ public class ReleaseReadDTO {
             this.version = version;
         }
 
-        public int getProjectId() {
+        public long getProjectId() {
             return projectId;
         }
 
-        public void setProjectId(int projectId) {
+        public void setProjectId(long projectId) {
             this.projectId = projectId;
         }
 

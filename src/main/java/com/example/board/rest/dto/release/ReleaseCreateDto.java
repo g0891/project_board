@@ -3,11 +3,11 @@ package com.example.board.rest.dto.release;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Описание релиза для создания")
-public class ReleaseCreateDTO {
+public class ReleaseCreateDto {
         @Schema(description = "Версия релиза")
         private String version;
         @Schema(description = "Идентификатор проекта")
-        private int projectId;
+        private long projectId;
 
         public String getVersion() {
             return version;
@@ -17,11 +17,11 @@ public class ReleaseCreateDTO {
             this.version = version;
         }
 
-        public int getProjectId() {
+        public long getProjectId() {
             return projectId;
         }
 
-        public void setProjectId(int projectId) {
+        public void setProjectId(long projectId) {
             this.projectId = projectId;
         }
 }

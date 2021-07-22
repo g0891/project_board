@@ -1,9 +1,9 @@
 package com.example.board.rest.dto;
 
-public class IdDTO {
+public class IdDto {
     private int id;
 
-    public IdDTO(int id) {
+    public IdDto(int id) {
         this.id = id;
     }
 
