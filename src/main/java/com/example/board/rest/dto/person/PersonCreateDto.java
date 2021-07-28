@@ -11,6 +11,14 @@ public class PersonCreateDto {
     @Schema(description = "Список ролей пользователя пользователя")
     private List<PersonRole> roles;
 
+    public PersonCreateDto() {
+    }
+
+    public PersonCreateDto(String name, List<PersonRole> roles) {
+        this.name = name;
+        this.roles = roles;
+    }
+
     public String getName() {
         return name;
     }

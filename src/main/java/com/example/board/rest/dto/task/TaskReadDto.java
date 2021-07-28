@@ -17,7 +17,7 @@ public class TaskReadDto {
     @Schema(description = "Автор")
     private long authorId;
     @Schema(description = "Исполнитель")
-    private long executorId;
+    private Long executorId;
     @Schema(description = "Идентификатор релиза")
     private long releaseId;
     @Schema(description = "Дата создания")
@@ -25,7 +25,10 @@ public class TaskReadDto {
     @Schema(description = "Дата завершения")
     private LocalDateTime doneOn;
 
-    public TaskReadDto(long id, String name, String description, TaskStatus status, long authorId, long executorId, long releaseId, LocalDateTime createdOn, LocalDateTime doneOn) {
+    public TaskReadDto() {
+    }
+
+    public TaskReadDto(long id, String name, String description, TaskStatus status, long authorId, Long executorId, long releaseId, LocalDateTime createdOn, LocalDateTime doneOn) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -77,11 +80,11 @@ public class TaskReadDto {
         this.authorId = authorId;
     }
 
-    public long getExecutorId() {
+    public Long getExecutorId() {
         return executorId;
     }
 
-    public void setExecutorId(long executorId) {
+    public void setExecutorId(Long executorId) {
         this.executorId = executorId;
     }
 

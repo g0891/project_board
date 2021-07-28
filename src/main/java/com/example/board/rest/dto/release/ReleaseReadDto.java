@@ -19,7 +19,10 @@ public class ReleaseReadDto {
         @Schema(description = "Дата выпуска релиза")
         private LocalDateTime releasedOn;
 
-        public ReleaseReadDto(long id, String version, long projectId, ReleaseStatus status, LocalDateTime createdOn, LocalDateTime releasedOn) {
+    public ReleaseReadDto() {
+    }
+
+    public ReleaseReadDto(long id, String version, long projectId, ReleaseStatus status, LocalDateTime createdOn, LocalDateTime releasedOn) {
             this.id = id;
             this.version = version;
             this.projectId = projectId;

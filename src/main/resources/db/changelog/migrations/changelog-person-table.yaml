@@ -1,0 +1,21 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 000000-create-table-person
+      author: g0891
+      changes:
+        - createTable:
+            tableName: person
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true

@@ -13,11 +13,14 @@ public class TaskUpdateDto {
     @Schema(description = "Автор")
     private long authorId;
     @Schema(description = "Исполнитель")
-    private long executorId;
+    private Long executorId;
     @Schema(description = "Идентификатор релиза")
     private long releaseId;
 
-    public TaskUpdateDto(String name, String description, TaskStatus status, int authorId, int executorId, int releaseId) {
+    public TaskUpdateDto() {
+    }
+
+    public TaskUpdateDto(String name, String description, TaskStatus status, int authorId, Long executorId, int releaseId) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -58,11 +61,11 @@ public class TaskUpdateDto {
         this.authorId = authorId;
     }
 
-    public long getExecutorId() {
+    public Long getExecutorId() {
         return executorId;
     }
 
-    public void setExecutorId(long executorId) {
+    public void setExecutorId(Long executorId) {
         this.executorId = executorId;
     }
 

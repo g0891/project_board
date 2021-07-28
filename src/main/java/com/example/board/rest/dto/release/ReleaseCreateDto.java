@@ -4,24 +4,32 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Описание релиза для создания")
 public class ReleaseCreateDto {
-        @Schema(description = "Версия релиза")
-        private String version;
-        @Schema(description = "Идентификатор проекта")
-        private long projectId;
+    @Schema(description = "Версия релиза")
+    private String version;
+    @Schema(description = "Идентификатор проекта")
+    private long projectId;
 
-        public String getVersion() {
+    public ReleaseCreateDto() {
+    }
+
+    public ReleaseCreateDto(String version, long projectId) {
+        this.version = version;
+        this.projectId = projectId;
+    }
+
+    public String getVersion() {
             return version;
         }
 
-        public void setVersion(String version) {
-            this.version = version;
-        }
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-        public long getProjectId() {
-            return projectId;
-        }
+    public long getProjectId() {
+        return projectId;
+    }
 
-        public void setProjectId(long projectId) {
-            this.projectId = projectId;
-        }
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
+    }
 }

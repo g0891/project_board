@@ -15,6 +15,17 @@ public class TaskCreateDto {
     @Schema(description = "Идентификатор релиза")
     private long releaseId;
 
+    public TaskCreateDto() {
+    }
+
+    public TaskCreateDto(String name, String description, long authorId, long executorId, long releaseId) {
+        this.name = name;
+        this.description = description;
+        this.authorId = authorId;
+        this.executorId = executorId;
+        this.releaseId = releaseId;
+    }
+
     public String getName() {
         return name;
     }

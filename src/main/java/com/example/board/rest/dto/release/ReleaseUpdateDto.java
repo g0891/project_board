@@ -11,6 +11,9 @@ public class ReleaseUpdateDto {
     @Schema(description = "Статус релиза")
     private ReleaseStatus status;
 
+    public ReleaseUpdateDto() {
+    }
+
     public ReleaseUpdateDto(String version, int projectId, ReleaseStatus status) {
         this.version = version;
         this.projectId = projectId;

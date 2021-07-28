@@ -11,6 +11,9 @@ public class PersonUpdateDto {
     @Schema(description = "Список ролей пользователя пользователя")
     private List<PersonRole> roles;
 
+    public PersonUpdateDto() {
+    }
+
     public PersonUpdateDto(String name, List<PersonRole> roles) {
         this.name = name;
         this.roles = roles;
