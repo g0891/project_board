@@ -7,6 +7,7 @@ import com.example.board.rest.dto.person.PersonCreateDto;
 import com.example.board.rest.dto.person.PersonReadDto;
 import com.example.board.rest.dto.person.PersonRole;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -15,11 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Set;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = RoleRepository.class, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public abstract class PersonMapper {
 
-    @Autowired
-    RoleRepository roleRepository;
+   protected RoleRepository roleRepository;
+
+   @Autowired
+   public void setRoleRepository(RoleRepository roleRepository) {
+       this.roleRepository = roleRepository;
+   }
 
 /*
     // id, name, roles - mapped automatically
@@ -29,6 +34,7 @@ public abstract class PersonMapper {
             @Mapping(target = "roles", source = "roles")
     })
 */
+
     public abstract PersonReadDto personEntityToPersonReadDto(PersonEntity personEntity);
 
     public abstract Set<PersonRole> roleEntitySetToPersonRoleSet(Set<RoleEntity> roleEntitySet);

@@ -19,6 +19,6 @@ public class DefaultErrorHandleController {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         logger.trace("logging exception", e);
-        return new ResponseEntity<>(new ErrorResponse("Something unexpected happened: " + e.getMessage() + e.getStackTrace().toString()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponse(String.format("Something unexpected happened: %s", e.getMessage())), HttpStatus.BAD_REQUEST);
     }
 }

@@ -13,9 +13,11 @@ import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumExc
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
     ProjectRepository projectRepository;

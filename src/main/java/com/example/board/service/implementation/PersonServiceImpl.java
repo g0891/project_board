@@ -12,11 +12,13 @@ import com.example.board.rest.errorController.exception.BoardAppIncorrectIdExcep
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Service
 public class PersonServiceImpl implements PersonService {
 
     @Autowired

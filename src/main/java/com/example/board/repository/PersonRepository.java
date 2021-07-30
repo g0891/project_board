@@ -9,8 +9,4 @@ import java.util.Optional;
 
 @Repository
 public interface PersonRepository extends JpaRepository<PersonEntity, Long> {
-/*    Optional<PersonEntity> findById(Long id);
-    List<PersonEntity> findAll();
-    PersonEntity save(PersonEntity person);
-    void deleteById(Long id);*/
 }

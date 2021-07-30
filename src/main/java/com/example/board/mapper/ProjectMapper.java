@@ -16,8 +16,16 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", imports = {ProjectStatus.class})
 public abstract class ProjectMapper {
+/*    @Autowired
+    PersonRepository personRepository;*/
+
+    protected PersonRepository personRepository;
+
     @Autowired
-    PersonRepository personRepository;
+    public void setPersonRepository(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
+
 
     @Mappings({
             @Mapping(target = "id", expression = "java(null)"),

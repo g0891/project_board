@@ -30,13 +30,13 @@ public class PersonEntity {
     private Set<RoleEntity> roles;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
-    private List<ProjectEntity> projectsWhereCustomer;
+    private Set<ProjectEntity> projectsWhereCustomer;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
-    private List<TaskEntity> tasksWhereAuthor;
+    private Set<TaskEntity> tasksWhereAuthor;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "executor")
-    private List<TaskEntity> tasksWhereExecutor;
+    private Set<TaskEntity> tasksWhereExecutor;
 
     public PersonEntity() {
     }

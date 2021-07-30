@@ -2,6 +2,9 @@ package com.example.board.rest.dto.person;
 
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum PersonRole {
     CUSTOMER("Customer"),
     AUTHOR("Author"),
@@ -22,13 +25,14 @@ public enum PersonRole {
             throw new BoardAppIncorrectEnumException("NULL", PersonRole.class);
         }
 
+        Optional<PersonRole> personRole = Arrays.stream(PersonRole.values())
+                .filter( role -> role.name().equalsIgnoreCase(text))
+                .findFirst();
 
-        for (PersonRole personRole: values()) {
-            if (personRole.name().equalsIgnoreCase(text)) {
-                return personRole;
-            }
+        if (personRole.isPresent()) {
+            return personRole.get();
+        } else {
+            throw new BoardAppIncorrectEnumException(text, PersonRole.class);
         }
-
-        throw new BoardAppIncorrectEnumException(text, PersonRole.class);
     }
 }

@@ -5,6 +5,7 @@ import com.example.board.entity.ReleaseEntity;
 import com.example.board.entity.TaskEntity;
 import com.example.board.repository.PersonRepository;
 import com.example.board.repository.ReleaseRepository;
+import com.example.board.repository.RoleRepository;
 import com.example.board.rest.dto.task.TaskCreateDto;
 import com.example.board.rest.dto.task.TaskReadDto;
 import com.example.board.rest.dto.task.TaskStatus;
@@ -20,11 +21,24 @@ import java.util.List;
 @Mapper(componentModel = "spring", imports = {TaskStatus.class, LocalDateTime.class})
 public abstract class TaskMapper {
 
-    @Autowired
-    PersonRepository personRepository;
+/*    @Autowired
+    PersonRepository personRepository;*/
+
+    protected PersonRepository personRepository;
 
     @Autowired
-    ReleaseRepository releaseRepository;
+    public void setRoleRepository(RoleRepository roleRepository) {
+        this.personRepository = personRepository;
+    }
+
+/*    @Autowired
+    ReleaseRepository releaseRepository;*/
+
+    protected ReleaseRepository releaseRepository;
+
+    protected void setReleaseRepository(ReleaseRepository releaseRepository) {
+        this.releaseRepository = releaseRepository;
+    }
 
     @Mappings({
             @Mapping(target = "authorId", expression = "java(taskEntity.getAuthor().getId())"),

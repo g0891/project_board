@@ -28,8 +28,12 @@ import java.util.List;
 @Tag(name = "Контроллер работы с релизами", description = "Позволяет создавать, просматривать и удалять релизы")
 public class ReleaseController {
 
-    @Autowired
-    ReleaseService releaseService;
+    //@Autowired
+    private final ReleaseService releaseService;
+
+    public ReleaseController(ReleaseService releaseService) {
+        this.releaseService = releaseService;
+    }
 
     @GetMapping
     @Operation(summary = "Список релизов", description = "Позволяет получить полный список релизов")

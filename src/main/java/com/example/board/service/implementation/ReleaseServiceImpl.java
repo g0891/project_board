@@ -12,10 +12,12 @@ import com.example.board.rest.dto.release.ReleaseUpdateDto;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.service.ReleaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class ReleaseServiceImpl implements ReleaseService {
 
     @Autowired

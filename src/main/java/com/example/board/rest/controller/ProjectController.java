@@ -27,8 +27,12 @@ import java.util.List;
 @Tag(name = "Контроллер работы с проектами", description = "Позволяет создавать, просматривать и удалять проекты")
 public class ProjectController {
 
-    @Autowired
-    ProjectService projectService;
+    //@Autowired
+    private final ProjectService projectService;
+
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     @GetMapping
     @Operation(summary = "Список проектов", description = "Позволяет получить полный список проектов")

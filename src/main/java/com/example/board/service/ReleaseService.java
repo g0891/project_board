@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface ReleaseService {
     ReleaseReadDto getById(long id) throws BoardAppIncorrectIdException;
     List<ReleaseReadDto> getAll();

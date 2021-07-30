@@ -4,6 +4,7 @@ import com.example.board.rest.dto.person.PersonCreateDto;
 import com.example.board.rest.dto.person.PersonReadDto;
 import com.example.board.rest.dto.person.PersonUpdateDto;
 import com.example.board.service.PersonService;
+import com.example.board.service.implementation.PersonServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,8 +27,12 @@ import java.util.List;
 @Tag(name = "Контроллер работы с пользователями", description = "Позволяет создавать, просматривать и удалять пользователя")
 public class PersonController {
 
-    @Autowired
-    private PersonService personService;
+    //@Autowired
+    private final PersonService personService;
+
+    public PersonController(PersonService personService) {
+        this.personService = personService;
+    }
 
     @GetMapping
     @Operation(summary = "Список пользователей", description = "Позволяет получить полный ссписок пользователей")

@@ -26,8 +26,12 @@ import java.util.List;
 @Tag(name = "Контроллер работы с задачами", description = "Позволяет создавать, просматривать и удалять задачи")
 public class TaskController {
 
-    @Autowired
-    TaskService taskService;
+    //@Autowired
+    private final TaskService taskService;
+
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @GetMapping
     @Operation(summary = "Список задач", description = "Позволяет получить полный список задач")
