@@ -20,7 +20,7 @@ public class ReleaseEntity {
     @Column(name = "released_on")
     private LocalDateTime releasedOn;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
