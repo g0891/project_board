@@ -1,3 +1,4 @@
+/*
 package com.example.board.rest.dto.task;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -76,4 +77,4 @@ public class TaskUpdateDto {
     public void setReleaseId(long releaseId) {
         this.releaseId = releaseId;
     }
-}
+}*/

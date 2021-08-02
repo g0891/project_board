@@ -85,4 +85,12 @@ public class ReleaseEntity {
     public void setProject(ProjectEntity project) {
         this.project = project;
     }
+
+    public List<TaskEntity> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<TaskEntity> tasks) {
+        this.tasks = tasks;
+    }
 }

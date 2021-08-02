@@ -7,24 +7,27 @@ import com.example.board.rest.dto.person.PersonCreateDto;
 import com.example.board.rest.dto.person.PersonReadDto;
 import com.example.board.rest.dto.person.PersonRole;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
-import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.management.relation.Role;
 import java.util.List;
 import java.util.Set;
 
-@Mapper(componentModel = "spring", uses = RoleRepository.class, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring")
 public abstract class PersonMapper {
 
-   protected RoleRepository roleRepository;
+/*    @Autowired
+    RoleRepository roleRepository;*/
 
-   @Autowired
-   public void setRoleRepository(RoleRepository roleRepository) {
-       this.roleRepository = roleRepository;
-   }
+    protected RoleRepository roleRepository;
+
+    @Autowired
+    public void setRoleRepository(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
 /*
     // id, name, roles - mapped automatically
@@ -34,17 +37,19 @@ public abstract class PersonMapper {
             @Mapping(target = "roles", source = "roles")
     })
 */
-
     public abstract PersonReadDto personEntityToPersonReadDto(PersonEntity personEntity);
 
     public abstract Set<PersonRole> roleEntitySetToPersonRoleSet(Set<RoleEntity> roleEntitySet);
 
     public PersonRole roleEntityToPersonRole(RoleEntity roleEntity) {
-        return PersonRole.fromText(roleEntity.getName());
+        return PersonRole.create(roleEntity.getName());
     }
 
     @Mappings({
-            @Mapping(target = "id", expression = "java(null)")
+            @Mapping(target = "id", expression = "java(null)"),
+            @Mapping(target = "projectsWhereCustomer", ignore = true),
+            @Mapping(target = "tasksWhereAuthor", ignore = true),
+            @Mapping(target = "tasksWhereExecutor", ignore = true)
 /*
             // name, roles - mapped automatically
             @Mapping(target = "name", source = "name"),
@@ -54,8 +59,8 @@ public abstract class PersonMapper {
     public abstract PersonEntity personCreateDtoToPersonEntity(PersonCreateDto personCreateDto);
 
     public RoleEntity personRoleToRoleEntity(PersonRole personRole) {
-        return roleRepository.findByNameIgnoreCase(personRole.getName()).orElseThrow(
-                () -> new BoardAppIncorrectEnumException(personRole.getName(), PersonRole.class)
+        return roleRepository.findByNameIgnoreCase(personRole.name()).orElseThrow(
+                () -> new BoardAppIncorrectEnumException(personRole.name(), PersonRole.class)
         );
     }
 

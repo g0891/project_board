@@ -1,3 +1,4 @@
+/*
 package com.example.board.rest.dto.person;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,4 +35,4 @@ public class PersonUpdateDto {
     public void setRoles(List<PersonRole> roles) {
         this.roles = roles;
     }
-}
+}*/

@@ -7,58 +7,57 @@ import com.example.board.repository.PersonRepository;
 import com.example.board.repository.RoleRepository;
 import com.example.board.rest.dto.person.PersonCreateDto;
 import com.example.board.rest.dto.person.PersonReadDto;
-import com.example.board.rest.dto.person.PersonUpdateDto;
+import com.example.board.rest.dto.person.PersonRole;
+//import com.example.board.rest.dto.person.PersonUpdateDto;
+import com.example.board.rest.errorController.exception.BoardAppConsistencyViolationException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 public class PersonServiceImpl implements PersonService {
 
+    private final PersonRepository personRepository;
+    private final PersonMapper personMapper;
+    private final RoleRepository roleRepository;
+
     @Autowired
+    public PersonServiceImpl(PersonRepository personRepository, PersonMapper personMapper, RoleRepository roleRepository) {
+        this.personRepository = personRepository;
+        this.personMapper = personMapper;
+        this.roleRepository = roleRepository;
+    }
+
+/*    @Autowired
     private PersonRepository personRepository;
 
     @Autowired
     private PersonMapper personMapper;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleRepository roleRepository;*/
 
     @Override
     public PersonReadDto getById(long id) throws BoardAppIncorrectIdException {
         PersonEntity personEntity = personRepository.findById(id).orElseThrow(
                 () -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
         );
-
         return personMapper.personEntityToPersonReadDto(personEntity);
-
-    /*    return new PersonReadDto(
-                personEntity.getId(),
-                personEntity.getName(),
-                personEntity.getRoles().stream().map(role -> PersonRole.valueOf(role.getName().toUpperCase())).collect(Collectors.toSet())
-        );*/
     }
 
     @Override
     public List<PersonReadDto> getAll() {
         List<PersonEntity> personEntities = personRepository.findAll();
         return personMapper.personEntityListToPersonReadDtoList(personEntities);
-        /*return personEntities.stream().map(person -> new PersonReadDto(
-           person.getId(),
-           person.getName(),
-           person.getRoles()
-                   .stream()
-                   .map(RoleEntity::getName)
-                   .map(String::toUpperCase)
-                   .map(PersonRole::valueOf)
-                   .collect(Collectors.toSet())
-        )).collect(Collectors.toList());*/
     }
 
     @Override
@@ -67,10 +66,9 @@ public class PersonServiceImpl implements PersonService {
         personEntity = personRepository.save(personEntity);
         return personEntity.getId();
 
-        /*return 0;*/
     }
 
-    @Override
+/*    @Override
     public void update(long id, PersonUpdateDto person) throws BoardAppIncorrectIdException {
         PersonEntity personEntity = personRepository.findById(id).orElseThrow(
                 () -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
@@ -86,14 +84,44 @@ public class PersonServiceImpl implements PersonService {
         personEntity.setRoles(roleEntities);
         personRepository.save(personEntity);
 
+    }*/
+
+    @Override
+    public void update(long id, Optional<String> name, Optional<Set<PersonRole>> roles) {
+        PersonEntity personEntity = personRepository.findById(id).orElseThrow(
+                () -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
+        );
+
+        name.ifPresent(personEntity::setName);
+
+        if (roles.isPresent()) {
+            Set<RoleEntity> roleEntities = new HashSet<>();
+            roles.get().stream().forEach(role -> roleEntities.add(
+                    roleRepository.findByNameIgnoreCase(role.name()).orElseThrow(
+                            () -> new BoardAppIncorrectRoleException("Incorrect role name: " + role.name())
+                    )));
+            personEntity.setRoles(roleEntities);
+        }
+
+        personRepository.save(personEntity);
+
     }
 
     @Override
-    public void delete(long id) throws BoardAppIncorrectIdException {
-        if (personRepository.existsById(id)) {
-            personRepository.deleteById(id);
-        } else {
-            throw new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id));
+    public void delete(long id) throws BoardAppIncorrectIdException, BoardAppConsistencyViolationException {
+        PersonEntity personEntity = personRepository.findById(id).orElseThrow(
+                () -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
+        );
+        if (!personEntity.getProjectsWhereCustomer().isEmpty()) {
+            throw new BoardAppConsistencyViolationException("A person can't be deleted because of participating in projects as CUSTOMER");
         }
+        if (!personEntity.getTasksWhereAuthor().isEmpty()) {
+            throw new BoardAppConsistencyViolationException("A person can't be deleted because of being an AUTHOR of some tasks.");
+        }
+        if (!personEntity.getTasksWhereExecutor().isEmpty()) {
+            throw new BoardAppConsistencyViolationException("A person can't be deleted because of being an EXECUTOR in some tasks.");
+        }
+
+        personRepository.deleteById(id);
     }
 }

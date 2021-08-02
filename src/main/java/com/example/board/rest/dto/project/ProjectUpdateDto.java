@@ -1,3 +1,4 @@
+/*
 package com.example.board.rest.dto.project;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -54,4 +55,4 @@ public class ProjectUpdateDto {
     public void setStatus(ProjectStatus projectStatus) {
         this.status = projectStatus;
     }
-}
+}*/

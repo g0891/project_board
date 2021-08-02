@@ -10,15 +10,15 @@ public class TaskCreateDto {
     private String description;
     @Schema(description = "Автор")
     private long authorId;
-    @Schema(description = "Исполнитель")
-    private long executorId;
+    @Schema(description = "Исполнитель (опционально)")
+    private Long executorId;
     @Schema(description = "Идентификатор релиза")
     private long releaseId;
 
     public TaskCreateDto() {
     }
 
-    public TaskCreateDto(String name, String description, long authorId, long executorId, long releaseId) {
+    public TaskCreateDto(String name, String description, long authorId, Long executorId, long releaseId) {
         this.name = name;
         this.description = description;
         this.authorId = authorId;
@@ -50,11 +50,11 @@ public class TaskCreateDto {
         this.authorId = authorId;
     }
 
-    public long getExecutorId() {
+    public Long getExecutorId() {
         return executorId;
     }
 
-    public void setExecutorId(long executorId) {
+    public void setExecutorId(Long executorId) {
         this.executorId = executorId;
     }
 

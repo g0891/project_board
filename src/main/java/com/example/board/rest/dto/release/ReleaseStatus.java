@@ -4,6 +4,9 @@ import com.example.board.rest.dto.project.ProjectStatus;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum ReleaseStatus {
         OPEN,
         CLOSED;
@@ -13,11 +16,15 @@ public enum ReleaseStatus {
                 if (providedStatus == null) {
                         throw new BoardAppIncorrectEnumException("NULL", ReleaseStatus.class);
                 }
-                for (ReleaseStatus s: ReleaseStatus.values()) {
-                        if (s.name().equalsIgnoreCase(providedStatus)) {
-                                return s;
-                        }
+
+                Optional<ReleaseStatus> releaseStatus = Arrays.stream(ReleaseStatus.values())
+                        .filter(status -> status.name().equalsIgnoreCase(providedStatus))
+                        .findAny();
+
+                if (releaseStatus.isPresent()) {
+                        return releaseStatus.get();
+                } else {
+                        throw new BoardAppIncorrectEnumException(providedStatus, ReleaseStatus.class);
                 }
-                throw new BoardAppIncorrectEnumException(providedStatus, ReleaseStatus.class);
         }
 }

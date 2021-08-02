@@ -1,3 +1,4 @@
+/*
 package com.example.board.rest.dto.release;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,4 +44,4 @@ public class ReleaseUpdateDto {
     public void setStatus(ReleaseStatus status) {
         this.status = status;
     }
-}
+}*/
