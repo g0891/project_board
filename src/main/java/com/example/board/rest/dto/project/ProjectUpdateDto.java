@@ -13,6 +13,9 @@ public class ProjectUpdateDto {
     @Schema(description = "Статус проекта")
     private ProjectStatus status;
 
+    public ProjectUpdateDto() {
+    }
+
     public ProjectUpdateDto(String name, String description, int customerId, ProjectStatus status) {
         this.name = name;
         this.description = description;

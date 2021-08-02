@@ -3,6 +3,7 @@ package com.example.board.rest.dto.person;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
+import java.util.Set;
 
 @Schema(description = "Описание пользователя для ответов")
 public class PersonReadDto {
@@ -11,9 +12,9 @@ public class PersonReadDto {
     @Schema(description = "Имя пользователя")
     private String name;
     @Schema(description = "Список ролей пользователя пользователя")
-    private List<PersonRole> roles;
+    private Set<PersonRole> roles;
 
-    public PersonReadDto(long id, String name, List<PersonRole> roles) {
+    public PersonReadDto(long id, String name, Set<PersonRole> roles) {
         this.id = id;
         this.name = name;
         this.roles = roles;
@@ -35,11 +36,11 @@ public class PersonReadDto {
         this.name = name;
     }
 
-    public List<PersonRole> getRoles() {
+    public Set<PersonRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<PersonRole> roles) {
+    public void setRoles(Set<PersonRole> roles) {
         this.roles = roles;
     }
 }

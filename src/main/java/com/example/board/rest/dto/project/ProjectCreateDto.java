@@ -9,7 +9,16 @@ public class ProjectCreateDto {
     @Schema(description = "Описание проекта")
     private String description;
     @Schema(description = "Идентификатор клиента")
-    private int customerId;
+    private long customerId;
+
+/*    public ProjectCreateDto() {
+    }
+
+    public ProjectCreateDto(String name, String description, long customerId) {
+        this.name = name;
+        this.description = description;
+        this.customerId = customerId;
+    }*/
 
     public String getName() {
         return name;
@@ -27,11 +36,11 @@ public class ProjectCreateDto {
         this.description = description;
     }
 
-    public int getCustomerId() {
+    public long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(long customerId) {
         this.customerId = customerId;
     }
 

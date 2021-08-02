@@ -1,0 +1,70 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 000000-create-table-task
+      author: g0891
+      changes:
+        - createTable:
+            tableName: task
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_on
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column: # can be NULL until done
+                  name: done_on
+                  type: timestamp
+              - column:
+                  name: author_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column: # can be NULL cause executor can be unknown at the time of creation
+                  name: executor_id
+                  type: bigint
+              - column:
+                  name: release_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_author
+            baseTableName: task
+            baseColumnNames: author_id
+            referencedTableName: person
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: fk_executor
+            baseTableName: task
+            baseColumnNames: executor_id
+            referencedTableName: person
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: release
+            baseTableName: task
+            baseColumnNames: release_id
+            referencedTableName: release
+            referencedColumnNames: id

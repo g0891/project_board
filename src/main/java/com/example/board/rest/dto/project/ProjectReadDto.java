@@ -15,6 +15,9 @@ public class ProjectReadDto {
     @Schema(description = "Статус проекта")
     private ProjectStatus status;
 
+    public ProjectReadDto() {
+    }
+
     public ProjectReadDto(long id, String name, String description, long customerId, ProjectStatus status) {
         this.id = id;
         this.name = name;

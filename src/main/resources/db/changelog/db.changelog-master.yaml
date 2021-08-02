@@ -1,0 +1,12 @@
+databaseChangeLog:
+
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-person-table.yaml }
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-role-table.yaml}
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-person-role-table.yaml}
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-project-table.yaml}
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-release-table.yaml}
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-task-table.yaml}
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-hibernate-sequence.yaml}
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-populate-with-sample-data.yaml}
+
+

@@ -1,0 +1,18 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 000000-populate-with-sample-data
+      author: g0891
+      changes:
+        - sql:
+            sql: INSERT INTO person VALUES (1, 'John'), (2, 'Kate'), (3, 'Sam')
+        - sql:
+            sql: INSERT INTO person_role VALUES (1, 1), (2, 2), (2, 3), (3, 3)
+        - sql:
+            sql: INSERT INTO project VALUES (4, 'Project name 1', 'Project 1 description', 1, 'OPEN')
+        - sql:
+            sql: INSERT INTO release(id, version, project_id, status) VALUES (5, '1.0', 4, 'OPEN')
+        - sql:
+            sql: INSERT INTO task(id, name, description, status, author_id, executor_id, release_id) VALUES (6, 'Create some code', 'the code should be good', 'IN_PROGRESS', 2, 3, 5)
+        - sql:
+            sql: INSERT INTO task(id, name, description, status, author_id, release_id) VALUES (7, 'Make some improvements', 'it is very important', 'BACKLOG', 2, 5)
