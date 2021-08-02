@@ -29,10 +29,9 @@ public enum PersonRole {
                 .filter( role -> role.name().equalsIgnoreCase(text))
                 .findFirst();
 
-        if (personRole.isPresent()) {
-            return personRole.get();
-        } else {
-            throw new BoardAppIncorrectEnumException(text, PersonRole.class);
-        }
+        return personRole.orElseThrow(
+                () -> new BoardAppIncorrectEnumException(text, PersonRole.class)
+        );
+
     }
 }
