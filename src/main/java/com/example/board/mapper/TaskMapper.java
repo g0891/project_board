@@ -33,8 +33,6 @@ public abstract class TaskMapper {
         this.releaseRepository = releaseRepository;
     }
 
-
-
     @Mappings({
             @Mapping(target = "authorId", expression = "java(taskEntity.getAuthor().getId())"),
             @Mapping(target = "executorId", expression = "java(taskEntity.getExecutor() == null ? null : taskEntity.getExecutor().getId())"),

@@ -21,10 +21,8 @@ public enum ReleaseStatus {
                         .filter(status -> status.name().equalsIgnoreCase(providedStatus))
                         .findAny();
 
-                if (releaseStatus.isPresent()) {
-                        return releaseStatus.get();
-                } else {
-                        throw new BoardAppIncorrectEnumException(providedStatus, ReleaseStatus.class);
-                }
+                return releaseStatus.orElseThrow(
+                        () -> new BoardAppIncorrectEnumException(providedStatus, ReleaseStatus.class)
+                );
         }
 }

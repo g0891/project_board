@@ -75,27 +75,27 @@ public class PersonEntity {
         this.roles = roles;
     }
 
-    public List<ProjectEntity> getProjectsWhereCustomer() {
+    public Set<ProjectEntity> getProjectsWhereCustomer() {
         return projectsWhereCustomer;
     }
 
-    public void setProjectsWhereCustomer(List<ProjectEntity> projectsWhereCustomer) {
+    public void setProjectsWhereCustomer(Set<ProjectEntity> projectsWhereCustomer) {
         this.projectsWhereCustomer = projectsWhereCustomer;
     }
 
-    public List<TaskEntity> getTasksWhereAuthor() {
+    public Set<TaskEntity> getTasksWhereAuthor() {
         return tasksWhereAuthor;
     }
 
-    public void setTasksWhereAuthor(List<TaskEntity> tasksWhereAuthor) {
+    public void setTasksWhereAuthor(Set<TaskEntity> tasksWhereAuthor) {
         this.tasksWhereAuthor = tasksWhereAuthor;
     }
 
-    public List<TaskEntity> getTasksWhereExecutor() {
+    public Set<TaskEntity> getTasksWhereExecutor() {
         return tasksWhereExecutor;
     }
 
-    public void setTasksWhereExecutor(List<TaskEntity> tasksWhereExecutor) {
+    public void setTasksWhereExecutor(Set<TaskEntity> tasksWhereExecutor) {
         this.tasksWhereExecutor = tasksWhereExecutor;
     }
 }

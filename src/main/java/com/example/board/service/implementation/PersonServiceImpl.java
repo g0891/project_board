@@ -37,15 +37,6 @@ public class PersonServiceImpl implements PersonService {
         this.roleRepository = roleRepository;
     }
 
-/*    @Autowired
-    private PersonRepository personRepository;
-
-    @Autowired
-    private PersonMapper personMapper;
-
-    @Autowired
-    private RoleRepository roleRepository;*/
-
     @Override
     public PersonReadDto getById(long id) throws BoardAppIncorrectIdException {
         PersonEntity personEntity = personRepository.findById(id).orElseThrow(
@@ -67,24 +58,6 @@ public class PersonServiceImpl implements PersonService {
         return personEntity.getId();
 
     }
-
-/*    @Override
-    public void update(long id, PersonUpdateDto person) throws BoardAppIncorrectIdException {
-        PersonEntity personEntity = personRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
-        );
-
-        Set<RoleEntity> roleEntities = new HashSet<>();
-        person.getRoles().stream().forEach(role -> roleEntities.add(
-                roleRepository.findByNameIgnoreCase(role.getName()).orElseThrow(
-                    () -> new BoardAppIncorrectRoleException("Incorrect role name: " + role.getName())
-        )));
-
-        personEntity.setName(person.getName());
-        personEntity.setRoles(roleEntities);
-        personRepository.save(personEntity);
-
-    }*/
 
     @Override
     public void update(long id, Optional<String> name, Optional<Set<PersonRole>> roles) {

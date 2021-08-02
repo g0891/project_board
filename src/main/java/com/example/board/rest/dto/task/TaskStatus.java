@@ -24,17 +24,8 @@ public enum TaskStatus {
                 .filter(status -> status.name().equalsIgnoreCase(providedStatus))
                 .findFirst();
 
-        if (taskStatus.isPresent()) {
-            return taskStatus.get();
-        } else {
-            throw new BoardAppIncorrectEnumException(providedStatus, TaskStatus.class);
-        }
-
-  /*      for (TaskStatus s: TaskStatus.values()) {
-            if (s.name().equalsIgnoreCase(providedStatus)) {
-                return s;
-            }
-        }
-        throw new BoardAppIncorrectEnumException(providedStatus, TaskStatus.class);*/
+        return taskStatus.orElseThrow(
+                () -> new BoardAppIncorrectEnumException(providedStatus, TaskStatus.class)
+        );
     }
 }

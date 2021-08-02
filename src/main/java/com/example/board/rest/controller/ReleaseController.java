@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,7 +45,7 @@ public class ReleaseController {
 
     @GetMapping(path = "/{id}")
     @Operation(summary = "Прочитать релиз", description = "Позволяет получить описание релиза")
-    public ResponseEntity<ReleaseReadDto> getRelease(@PathVariable @Parameter(description = "Идентификатор релиза") long id) throws Exception{
+    public ResponseEntity<ReleaseReadDto> getRelease(@PathVariable @Parameter(description = "Идентификатор релиза") long id) {
         log.info(String.format("Release info requested for release id = %d", id));
         ReleaseReadDto releaseReadDto = releaseService.getById(id);
         log.info(String.format("Release info provided for release id = %d", id));
@@ -56,7 +55,7 @@ public class ReleaseController {
 
     @GetMapping(path = "/{id}/number-of-cancelled-tasks")
     @Operation(summary = "Посчитать незавершившиеся задачи", description = "Позволяет получить количество незавершившися в заданный релиз задач.")
-    public ResponseEntity<Long> countCanceledTasksNumber(@PathVariable @Parameter(description = "Идентификатор релиза") long id) throws Exception {
+    public ResponseEntity<Long> countCanceledTasksNumber(@PathVariable @Parameter(description = "Идентификатор релиза") long id) {
         log.info(String.format("Release info for counting cancelled tasks requested for release id = %d", id));
         Long count = releaseService.countCancelledForClosedRelease(id);
         log.info(String.format("Release info for counting cancelled tasks provided for release id = %d", id));
@@ -76,8 +75,7 @@ public class ReleaseController {
     @Operation(summary = "Обновить релиз", description = "Позволяет обновить данные по релизу")
     public ResponseEntity updateRelease(@PathVariable @Parameter(description = "Идентификатор релиза") long id,
                                         @RequestParam @Parameter(description = "Версия релиза (опционально)") Optional<String> version,
-                                        @RequestParam @Parameter(description = "Статус релиза (опционально)") Optional<ReleaseStatus> status
-                                        /*@RequestBody ReleaseUpdateDto release*/) throws Exception {
+                                        @RequestParam @Parameter(description = "Статус релиза (опционально)") Optional<ReleaseStatus> status) {
         log.info(String.format("Release update requested for id = %d", id));
         releaseService.update(id, version, status);
         log.info(String.format("Release update done for id = %d", id));
@@ -86,7 +84,7 @@ public class ReleaseController {
 
     @DeleteMapping(path = "/{id}")
     @Operation(summary = "Удалить релиз", description = "Позволяет удалить релиз")
-    public ResponseEntity deleteRelease(@PathVariable @Parameter(description = "Идентификатор релиза") long id) throws Exception{
+    public ResponseEntity deleteRelease(@PathVariable @Parameter(description = "Идентификатор релиза") long id) {
         log.info(String.format("Release deletion requested for id = %d", id));
         releaseService.delete(id);
         log.info(String.format("Release id = %d deleted", id));

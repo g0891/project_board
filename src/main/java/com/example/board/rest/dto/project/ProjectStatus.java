@@ -19,11 +19,10 @@ public enum ProjectStatus {
         Optional<ProjectStatus> projectStatus = Arrays.stream(ProjectStatus.values())
                 .filter(status -> status.name().equalsIgnoreCase(providedStatus))
                 .findAny();
-        if (projectStatus.isPresent()) {
-            return projectStatus.get();
-        } else {
-            throw new BoardAppIncorrectEnumException(providedStatus, ProjectStatus.class);
-        }
+
+        return projectStatus.orElseThrow(
+                () -> new BoardAppIncorrectEnumException(providedStatus, ProjectStatus.class)
+        );
 
     }
 }

@@ -20,9 +20,6 @@ import java.util.Optional;
 @Tag(name = "Контроллер работы с задачами", description = "Позволяет создавать, просматривать и удалять задачи")
 public class TaskController {
 
-/*    @Autowired
-    TaskService taskService;*/
-
     private static final Logger log = LoggerFactory.getLogger(TaskController.class);
 
     private final TaskService taskService;
@@ -43,7 +40,7 @@ public class TaskController {
 
     @GetMapping(path = "/{id}")
     @Operation(summary = "Прочитать задачу", description = "Позволяет получить описание задачи")
-    public ResponseEntity<TaskReadDto> getTask(@PathVariable @Parameter(description = "Идентификатор задачи") long id) throws Exception {
+    public ResponseEntity<TaskReadDto> getTask(@PathVariable @Parameter(description = "Идентификатор задачи") long id) {
         log.info(String.format("Task info requested for task id = %d", id));
         TaskReadDto task = taskService.getById(id);
         log.info(String.format("Task info provided for task id = %d", id));
@@ -59,15 +56,6 @@ public class TaskController {
         return ResponseEntity.ok().body(id);
     }
 
-/*
-    @PutMapping(path = "/{id}")
-    @Operation(summary = "Обновить данные задачи", description = "Позволяет обновить данные по задаче")
-    public ResponseEntity updateTask(@PathVariable @Parameter(description = "Идентификатор задачи") long id, @RequestBody TaskUpdateDto task) throws Exception {
-        taskService.update(id, task);
-        return ResponseEntity.ok().build();
-    }
-*/
-
     @PutMapping(path = "/{id}")
     @Operation(summary = "Обновить данные задачи", description = "Позволяет обновить данные по задаче")
     public ResponseEntity<String> updateTaskOpt(@PathVariable @Parameter(description = "Идентификатор задачи") long id,
@@ -75,7 +63,7 @@ public class TaskController {
                                         @Parameter(description = "Описание задачи (опционально)") @RequestParam Optional<String> description,
                                         @Parameter(description = "Статус задачи (опционально)") @RequestParam Optional<TaskStatus> status,
                                         @Parameter(description = "Идентификатор исполнителя задачи (опционально)") @RequestParam Optional<Long> executorId
-                                    ) throws Exception {
+                                    ) {
         log.info(String.format("Task update requested for id = %d", id));
         taskService.update(id, name, description, status, executorId);
         log.info(String.format("Task update done for id = %d", id));
@@ -84,7 +72,7 @@ public class TaskController {
 
     @DeleteMapping(path = "/{id}")
     @Operation(summary = "Удалить задачу", description = "Позволяет удалить задачу")
-    public ResponseEntity deleteTask(@PathVariable @Parameter(description = "Идентификатор задачи") long id) throws Exception {
+    public ResponseEntity deleteTask(@PathVariable @Parameter(description = "Идентификатор задачи") long id) {
         log.info(String.format("Task deletion requested for id = %d", id));
         taskService.delete(id);
         log.info(String.format("Task id = %d deleted", id));

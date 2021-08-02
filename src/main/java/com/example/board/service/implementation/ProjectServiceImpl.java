@@ -27,14 +27,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ProjectServiceImpl implements ProjectService {
-/*    @Autowired
-    ProjectRepository projectRepository;
-
-    @Autowired
-    PersonRepository personRepository;
-
-    @Autowired
-    ProjectMapper projectMapper;*/
 
     private final ProjectRepository projectRepository;
     private final PersonRepository personRepository;
@@ -73,24 +65,6 @@ public class ProjectServiceImpl implements ProjectService {
         projectEntity = projectRepository.save(projectEntity);
         return projectEntity.getId();
     }
-
-/*    @Override
-    public void update(long id, ProjectUpdateDto project) throws BoardAppIncorrectIdException {
-        ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no project with id = %d", id))
-        );
-
-        PersonEntity personEntity = personRepository.findById(project.getCustomerId()).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no customer with id = %d", project.getCustomerId()))
-        );
-
-        projectEntity.setName(project.getName());
-        projectEntity.setDescription(project.getDescription());
-        projectEntity.setStatus(projectEntity.getStatus());
-        projectEntity.setCustomer(personEntity);
-        projectRepository.save(projectEntity);
-
-    }*/
 
     @Override
     public void update(long id,

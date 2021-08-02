@@ -24,9 +24,6 @@ import java.util.Optional;
 @Tag(name = "Контроллер работы с проектами", description = "Позволяет создавать, просматривать и удалять проекты")
 public class ProjectController {
 
-    /*@Autowired
-    ProjectService projectService;
-*/
     private final static Logger log = LoggerFactory.getLogger(ProjectController.class);
 
     private final ProjectService projectService;
@@ -47,7 +44,7 @@ public class ProjectController {
 
     @GetMapping(path = "/{id}")
     @Operation(summary = "Прочитать проект", description = "Позволяет получить описание проекта")
-    public ResponseEntity<ProjectReadDto> getProject(@PathVariable @Parameter(description = "Идентификатор проекта") long id) throws Exception {
+    public ResponseEntity<ProjectReadDto> getProject(@PathVariable @Parameter(description = "Идентификатор проекта") long id) {
         log.info(String.format("Project info requested for project id = %d", id));
         ProjectReadDto projectReadDto = projectService.getById(id);
         log.info(String.format("Project info provided for project id = %d", id));
@@ -70,8 +67,7 @@ public class ProjectController {
                                         @RequestParam @Parameter(description = "Название проекта (опционально)") Optional<String> name,
                                         @RequestParam @Parameter(description = "Описание проекта (опционально)") Optional<String> description,
                                         @RequestParam @Parameter(description = "Идентификатор клиента (опционально)") Optional<Long> customerId,
-                                        @RequestParam @Parameter(description = "Статус проекта (опционально)") Optional<ProjectStatus> status
-                                        /*@RequestBody ProjectUpdateDto project*/)
+                                        @RequestParam @Parameter(description = "Статус проекта (опционально)") Optional<ProjectStatus> status)
             throws BoardAppIncorrectIdException, BoardAppIncorrectEnumException {
         log.info(String.format("Project update requested for id = %d", id));
         projectService.update(id, name, description, customerId, status);
@@ -81,7 +77,7 @@ public class ProjectController {
 
     @DeleteMapping(value = "/{id}")
     @Operation(summary = "Удалить проект", description = "Позволяет пудалить проект")
-    public ResponseEntity deleteProject(@PathVariable @Parameter(description = "Идентификатор проекта") long id) throws Exception{
+    public ResponseEntity deleteProject(@PathVariable @Parameter(description = "Идентификатор проекта") long id) {
         log.info(String.format("Project deletion requested for id = %d", id));
         projectService.delete(id);
         log.info(String.format("Project id = %d deleted", id));

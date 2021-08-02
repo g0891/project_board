@@ -23,9 +23,6 @@ import java.util.Set;
 @Tag(name = "Контроллер работы с пользователями", description = "Позволяет создавать, просматривать и удалять пользователя")
 public class PersonController {
 
-/*    @Autowired
-    private PersonService personService;*/
-
     private final static Logger log = LoggerFactory.getLogger(PersonController.class);
 
     private final PersonService personService;
@@ -46,7 +43,7 @@ public class PersonController {
 
     @GetMapping(path = "/{id}")
     @Operation(summary = "Описание пользователя", description = "Позволяет получить данные пользователя")
-    public ResponseEntity<PersonReadDto> getPerson(@PathVariable @Parameter(description = "Идентификатор пользователя") long id) throws Exception {
+    public ResponseEntity<PersonReadDto> getPerson(@PathVariable @Parameter(description = "Идентификатор пользователя") long id) {
         log.info(String.format("Person info requested for person id = %d", id));
         PersonReadDto personReadDto = personService.getById(id);
         log.info(String.format("Person info provided for person id = %d", id));
@@ -66,8 +63,7 @@ public class PersonController {
     @Operation(summary = "Обновить данные пользователя", description = "Позволяет обновить данные пользователя")
     public ResponseEntity updatePerson(@PathVariable @Parameter(description = "Идентификатор пользователя") long id,
                                        @RequestParam @Parameter(description = "Имя пользователя (опционально)") Optional<String> name,
-                                       @RequestParam @Parameter(description = "Перечень ролей пользователя (опционально)") Optional<Set<PersonRole>> roles
-                                       /*@RequestBody PersonUpdateDto person*/) throws Exception {
+                                       @RequestParam @Parameter(description = "Перечень ролей пользователя (опционально)") Optional<Set<PersonRole>> roles) {
         log.info(String.format("Person update requested for id = %d", id));
         personService.update(id, name, roles);
         log.info(String.format("Person update done for id = %d", id));
@@ -76,7 +72,7 @@ public class PersonController {
 
     @DeleteMapping(path = "/{id}")
     @Operation(summary = "Удалить пользователя", description = "Позволяет удалить пользователя")
-    public ResponseEntity deletePerson(@PathVariable @Parameter(description = "Идентификатор пользователя") long id) throws Exception {
+    public ResponseEntity deletePerson(@PathVariable @Parameter(description = "Идентификатор пользователя") long id) {
         log.info(String.format("Person deletion requested for id = %d", id));
         personService.delete(id);
         log.info(String.format("Person id = %d deleted", id));

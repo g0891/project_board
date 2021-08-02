@@ -31,21 +31,6 @@ import java.util.Optional;
 @Transactional
 public class TaskServiceImpl implements TaskService {
 
-/*    @Autowired
-    TaskRepository taskRepository;
-
-    @Autowired
-    PersonRepository personRepository;
-
-    @Autowired
-    ReleaseRepository releaseRepository;
-
-    @Autowired
-    TaskMapper taskMapper;
-
-    @Autowired
-    PersonMapper personMapper;*/
-
     private final TaskRepository taskRepository;
     private final PersonRepository personRepository;
     private final TaskMapper taskMapper;
@@ -88,39 +73,6 @@ public class TaskServiceImpl implements TaskService {
         taskEntity = taskRepository.save(taskEntity);
         return taskEntity.getId();
     }
-
-    /*@Override
-    public void update(long id, TaskUpdateDto task) throws BoardAppIncorrectIdException {
-        TaskEntity taskEntity = taskRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no task with id = %d", id))
-        );
-
-        PersonEntity author = personRepository.findById(task.getAuthorId()).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no person with id = %d", task.getAuthorId()))
-        );
-
-        PersonEntity executor;
-        if (task.getExecutorId() == null) {
-            executor = null;
-        } else {
-            executor = personRepository.findById(task.getExecutorId()).orElseThrow(
-                    () -> new BoardAppIncorrectIdException(String.format("There is no person with id = %d", task.getExecutorId()))
-            );
-        }
-
-        ReleaseEntity releaseEntity = releaseRepository.findById(task.getReleaseId()).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no release with id = %d", task.getReleaseId()))
-        );
-
-        taskEntity.setName(task.getName());
-        taskEntity.setDescription(task.getDescription());
-        taskEntity.setStatus(task.getStatus());
-        taskEntity.setAuthor(author);
-        taskEntity.setExecutor(executor);
-        taskEntity.setRelease(releaseEntity);
-        taskRepository.save(taskEntity);
-
-    }*/
 
     @Override
     public void update(long id,

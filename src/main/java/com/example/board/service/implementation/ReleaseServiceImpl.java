@@ -25,15 +25,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ReleaseServiceImpl implements ReleaseService {
-/*
-    @Autowired
-    ReleaseRepository releaseRepository;
-
-    @Autowired
-    ProjectRepository projectRepository;
-
-    @Autowired
-    ReleaseMapper releaseMapper;*/
 
     private final ReleaseRepository releaseRepository;
     private final ProjectRepository projectRepository;
@@ -73,26 +64,6 @@ public class ReleaseServiceImpl implements ReleaseService {
         return releaseEntity.getId();
     }
 
-/*    @Override
-    public void update(long id, ReleaseUpdateDto release) throws BoardAppIncorrectIdException {
-        ReleaseEntity releaseEntity = releaseRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no release with id = %d", id))
-        );
-        ProjectEntity projectEntity = projectRepository.findById(release.getProjectId()).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no project with id = %d", release.getProjectId()))
-        );
-
-        releaseEntity.setVersion(release.getVersion());
-        releaseEntity.setProject(projectEntity);
-        if (releaseEntity.getStatus() == ReleaseStatus.OPEN && release.getStatus() == ReleaseStatus.CLOSED) {
-            releaseEntity.setReleasedOn(LocalDateTime.now());
-        }
-        releaseEntity.setStatus(release.getStatus());
-        releaseRepository.save(releaseEntity);
-
-    }*/
-
-    @Transactional
     @Override
     public void update(long id, Optional<String> newVersion, Optional<ReleaseStatus> newStatus) {
         ReleaseEntity releaseEntity = releaseRepository.findById(id).orElseThrow(

@@ -16,8 +16,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", imports = {ProjectStatus.class})
 public abstract class ProjectMapper {
-/*    @Autowired
-    PersonRepository personRepository;*/
 
     protected PersonRepository personRepository;
 

@@ -19,9 +19,6 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public abstract class PersonMapper {
 
-/*    @Autowired
-    RoleRepository roleRepository;*/
-
     protected RoleRepository roleRepository;
 
     @Autowired

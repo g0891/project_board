@@ -18,7 +18,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", imports = {ReleaseStatus.class, LocalDateTime.class})
 public abstract class ReleaseMapper {
 
-
     protected ProjectRepository projectRepository;
 
     @Autowired
