@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("projects")
+//@RequestMapping("projects")
+@RequestMapping("${api.path}/projects")
 @Tag(name = "Контроллер работы с проектами", description = "Позволяет создавать, просматривать и удалять проекты")
 public class ProjectController {
 
@@ -28,7 +29,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @Autowired
+    //@Autowired
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
     }
@@ -45,9 +46,9 @@ public class ProjectController {
     @GetMapping(path = "/{id}")
     @Operation(summary = "Прочитать проект", description = "Позволяет получить описание проекта")
     public ResponseEntity<ProjectReadDto> getProject(@PathVariable @Parameter(description = "Идентификатор проекта") long id) {
-        log.info(String.format("Project info requested for project id = %d", id));
+        log.info("Project info requested for project id = {}", id);
         ProjectReadDto projectReadDto = projectService.getById(id);
-        log.info(String.format("Project info provided for project id = %d", id));
+        log.info("Project info provided for project id = {}", id);
         return ResponseEntity.ok().body(projectReadDto);
     }
 
@@ -57,7 +58,7 @@ public class ProjectController {
     public ResponseEntity<Long> newProject(@RequestBody ProjectCreateDto project) throws BoardAppIncorrectIdException {
         log.info("Project creation requested.");
         Long id = projectService.add(project);
-        log.info(String.format("Project created with id = %d", id));
+        log.info("Project created with id = {}", id);
         return ResponseEntity.ok().body(id);
     }
 
@@ -69,18 +70,18 @@ public class ProjectController {
                                         @RequestParam @Parameter(description = "Идентификатор клиента (опционально)") Optional<Long> customerId,
                                         @RequestParam @Parameter(description = "Статус проекта (опционально)") Optional<ProjectStatus> status)
             throws BoardAppIncorrectIdException, BoardAppIncorrectEnumException {
-        log.info(String.format("Project update requested for id = %d", id));
+        log.info("Project update requested for id = {}", id);
         projectService.update(id, name, description, customerId, status);
-        log.info(String.format("Project update done for id = %d", id));
+        log.info("Project update done for id = {}", id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
     @Operation(summary = "Удалить проект", description = "Позволяет пудалить проект")
     public ResponseEntity deleteProject(@PathVariable @Parameter(description = "Идентификатор проекта") long id) {
-        log.info(String.format("Project deletion requested for id = %d", id));
+        log.info("Project deletion requested for id = {}", id);
         projectService.delete(id);
-        log.info(String.format("Project id = %d deleted", id));
+        log.info("Project id = {} deleted", id);
         return ResponseEntity.ok().build();
     }
 

@@ -30,7 +30,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     private final ProjectRepository projectRepository;
     private final ReleaseMapper releaseMapper;
 
-    @Autowired
+    //@Autowired
     public ReleaseServiceImpl(ReleaseRepository releaseRepository, ProjectRepository projectRepository, ReleaseMapper releaseMapper) {
         this.releaseRepository = releaseRepository;
         this.projectRepository = projectRepository;
@@ -74,12 +74,13 @@ public class ReleaseServiceImpl implements ReleaseService {
             throw new BoardAppIncorrectStateException("Can't change an already CLOSED release");
         }
 
-        if (newStatus.isPresent() && newStatus.get() == ReleaseStatus.CLOSED) {
+        if (newStatus.isPresent() && (newStatus.get() == ReleaseStatus.CLOSED)) {
             releaseEntity.getTasks().stream()
-                    .forEach(task -> {if (task.getStatus() != TaskStatus.DONE && task.getStatus() != TaskStatus.CANCELED) {
+                    .filter(task -> task.getStatus() != TaskStatus.DONE && task.getStatus() != TaskStatus.CANCELED)
+                    .forEach(task -> {
                         task.setStatus(TaskStatus.CANCELED);
                         task.setDoneOn(LocalDateTime.now());
-                    }});
+                    });
             releaseEntity.setReleasedOn(LocalDateTime.now());
             releaseEntity.setStatus(ReleaseStatus.CLOSED);
         }

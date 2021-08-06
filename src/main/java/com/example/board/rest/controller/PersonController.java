@@ -19,7 +19,8 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-@RequestMapping("persons")
+@RequestMapping("${api.path}/persons")
+//@RequestMapping("persons")
 @Tag(name = "Контроллер работы с пользователями", description = "Позволяет создавать, просматривать и удалять пользователя")
 public class PersonController {
 
@@ -27,7 +28,7 @@ public class PersonController {
 
     private final PersonService personService;
 
-    @Autowired
+    //@Autowired
     public PersonController(PersonService personService) {
         this.personService = personService;
     }
@@ -44,9 +45,10 @@ public class PersonController {
     @GetMapping(path = "/{id}")
     @Operation(summary = "Описание пользователя", description = "Позволяет получить данные пользователя")
     public ResponseEntity<PersonReadDto> getPerson(@PathVariable @Parameter(description = "Идентификатор пользователя") long id) {
-        log.info(String.format("Person info requested for person id = %d", id));
+        //log.info(String.format("Person info requested for person id = %d", id));
+        log.info("Person info requested for person id = {}", id);
         PersonReadDto personReadDto = personService.getById(id);
-        log.info(String.format("Person info provided for person id = %d", id));
+        log.info("Person info provided for person id = {}", id);
         return ResponseEntity.ok().body(personReadDto);
     }
 
@@ -55,7 +57,7 @@ public class PersonController {
     public ResponseEntity<Long> newPerson(@RequestBody PersonCreateDto person) {
         log.info("Person creation requested.");
         Long id = personService.add(person);
-        log.info(String.format("Person created with id = %d", id));
+        log.info("Person created with id = {}", id);
         return ResponseEntity.ok().body(id);
     }
 
@@ -64,18 +66,18 @@ public class PersonController {
     public ResponseEntity updatePerson(@PathVariable @Parameter(description = "Идентификатор пользователя") long id,
                                        @RequestParam @Parameter(description = "Имя пользователя (опционально)") Optional<String> name,
                                        @RequestParam @Parameter(description = "Перечень ролей пользователя (опционально)") Optional<Set<PersonRole>> roles) {
-        log.info(String.format("Person update requested for id = %d", id));
+        log.info("Person update requested for id = {}", id);
         personService.update(id, name, roles);
-        log.info(String.format("Person update done for id = %d", id));
+        log.info("Person update done for id = {}", id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(path = "/{id}")
     @Operation(summary = "Удалить пользователя", description = "Позволяет удалить пользователя")
     public ResponseEntity deletePerson(@PathVariable @Parameter(description = "Идентификатор пользователя") long id) {
-        log.info(String.format("Person deletion requested for id = %d", id));
+        log.info("Person deletion requested for id = {}", id);
         personService.delete(id);
-        log.info(String.format("Person id = %d deleted", id));
+        log.info("Person id = {} deleted", id);
         return ResponseEntity.ok().build();
     }
 

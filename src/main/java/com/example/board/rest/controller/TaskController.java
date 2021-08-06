@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("tasks")
+//@RequestMapping("tasks")
+@RequestMapping("${api.path}/tasks")
 @Tag(name = "Контроллер работы с задачами", description = "Позволяет создавать, просматривать и удалять задачи")
 public class TaskController {
 
@@ -24,7 +25,7 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    @Autowired
+    //@Autowired
     public TaskController(TaskService taskService){
         this.taskService = taskService;
     }
@@ -41,9 +42,9 @@ public class TaskController {
     @GetMapping(path = "/{id}")
     @Operation(summary = "Прочитать задачу", description = "Позволяет получить описание задачи")
     public ResponseEntity<TaskReadDto> getTask(@PathVariable @Parameter(description = "Идентификатор задачи") long id) {
-        log.info(String.format("Task info requested for task id = %d", id));
+        log.info("Task info requested for task id = {}", id);
         TaskReadDto task = taskService.getById(id);
-        log.info(String.format("Task info provided for task id = %d", id));
+        log.info("Task info provided for task id = {}", id);
         return ResponseEntity.ok().body(task);
     }
 
@@ -52,7 +53,7 @@ public class TaskController {
     public ResponseEntity<Long> newTask(@RequestBody TaskCreateDto task) throws BoardAppIncorrectIdException {
         log.info("Task creation requested.");
         Long id = taskService.add(task);
-        log.info(String.format("Task created with id = %d", id));
+        log.info("Task created with id = {}", id);
         return ResponseEntity.ok().body(id);
     }
 
@@ -64,18 +65,18 @@ public class TaskController {
                                         @Parameter(description = "Статус задачи (опционально)") @RequestParam Optional<TaskStatus> status,
                                         @Parameter(description = "Идентификатор исполнителя задачи (опционально)") @RequestParam Optional<Long> executorId
                                     ) {
-        log.info(String.format("Task update requested for id = %d", id));
+        log.info("Task update requested for id = {}", id);
         taskService.update(id, name, description, status, executorId);
-        log.info(String.format("Task update done for id = %d", id));
+        log.info("Task update done for id = {}", id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(path = "/{id}")
     @Operation(summary = "Удалить задачу", description = "Позволяет удалить задачу")
     public ResponseEntity deleteTask(@PathVariable @Parameter(description = "Идентификатор задачи") long id) {
-        log.info(String.format("Task deletion requested for id = %d", id));
+        log.info("Task deletion requested for id = {}", id);
         taskService.delete(id);
-        log.info(String.format("Task id = %d deleted", id));
+        log.info("Task id = {} deleted", id);
         return ResponseEntity.ok().build();
     }
 }

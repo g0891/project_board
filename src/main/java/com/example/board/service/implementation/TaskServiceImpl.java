@@ -36,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
     private final PersonMapper personMapper;
 
-    @Autowired
+    //@Autowired
     public TaskServiceImpl(TaskRepository taskRepository, PersonRepository personRepository, TaskMapper taskMapper, PersonMapper personMapper) {
         this.taskRepository = taskRepository;
         this.personRepository = personRepository;
@@ -92,29 +92,30 @@ public class TaskServiceImpl implements TaskService {
         updatedDescription.ifPresent(taskEntity::setDescription);
 
         if (updatedStatus.isPresent()) {
+            TaskStatus updatedStatusValue = updatedStatus.get();
             if (taskEntity.getStatus() == TaskStatus.BACKLOG
-                    && updatedStatus.get() != TaskStatus.IN_PROGRESS
-                    && updatedStatus.get() != TaskStatus.CANCELED) {
+                    && updatedStatusValue != TaskStatus.IN_PROGRESS
+                    && updatedStatusValue != TaskStatus.CANCELED) {
                 throw new BoardAppIncorrectStateException("Task in BACKLOG status can be moved to IN_PROGRESS or CANCELED status only.");
             }
 
             if (taskEntity.getStatus() == TaskStatus.IN_PROGRESS
-                    && updatedStatus.get() != TaskStatus.DONE
-                    && updatedStatus.get() != TaskStatus.CANCELED) {
+                    && updatedStatusValue != TaskStatus.DONE
+                    && updatedStatusValue != TaskStatus.CANCELED) {
                 throw new BoardAppIncorrectStateException("Task in IN_PROGRESS status can be moved to DONE or CANCELED status only.");
             }
 
             if (taskEntity.getStatus() == TaskStatus.BACKLOG
-                    && updatedStatus.get() == TaskStatus.IN_PROGRESS
+                    && updatedStatusValue == TaskStatus.IN_PROGRESS
                     && updatedExecutorId.isEmpty()) {
                 throw new BoardAppIncorrectStateException("Task can't be moved to IN_PROGRESS without defining an executor");
             }
 
-            if (updatedStatus.get() == TaskStatus.CANCELED || updatedStatus.get() == TaskStatus.DONE) {
+            if (updatedStatusValue == TaskStatus.CANCELED || updatedStatusValue == TaskStatus.DONE) {
                 taskEntity.setDoneOn(LocalDateTime.now());
             }
 
-            taskEntity.setStatus(updatedStatus.get());
+            taskEntity.setStatus(updatedStatusValue);
         }
 
         if (updatedExecutorId.isPresent()) {

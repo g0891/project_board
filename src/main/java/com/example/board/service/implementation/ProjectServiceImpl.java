@@ -33,7 +33,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectMapper projectMapper;
     private final PersonMapper personMapper;
 
-    @Autowired
+    //@Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository, PersonRepository personRepository, ProjectMapper projectMapper, PersonMapper personMapper) {
         this.projectRepository = projectRepository;
         this.personRepository = personRepository;
@@ -81,7 +81,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new BoardAppIncorrectStateException("Can't change an already CLOSED project.");
         }
 
-        if (newStatus.isPresent() && newStatus.get() == ProjectStatus.CLOSED) {
+        if (newStatus.isPresent() && (newStatus.get() == ProjectStatus.CLOSED)) {
             if (projectEntity.getReleases().stream().anyMatch(release -> release.getStatus() != ReleaseStatus.CLOSED)) {
                 throw new BoardAppIncorrectStateException("Can't close the project containing a release in a not CLOSED state.");
             }

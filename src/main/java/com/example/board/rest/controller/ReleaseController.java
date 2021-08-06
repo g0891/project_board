@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("releases")
+//@RequestMapping("releases")
+@RequestMapping("${api.path}/releases")
 @Tag(name = "Контроллер работы с релизами", description = "Позволяет создавать, просматривать и удалять релизы")
 public class ReleaseController {
 
@@ -28,7 +29,7 @@ public class ReleaseController {
 
     private final ReleaseService releaseService;
 
-    @Autowired
+    //@Autowired
     public ReleaseController(ReleaseService releaseService) {
         this.releaseService = releaseService;
     }
@@ -46,19 +47,19 @@ public class ReleaseController {
     @GetMapping(path = "/{id}")
     @Operation(summary = "Прочитать релиз", description = "Позволяет получить описание релиза")
     public ResponseEntity<ReleaseReadDto> getRelease(@PathVariable @Parameter(description = "Идентификатор релиза") long id) {
-        log.info(String.format("Release info requested for release id = %d", id));
+        log.info("Release info requested for release id = {}", id);
         ReleaseReadDto releaseReadDto = releaseService.getById(id);
-        log.info(String.format("Release info provided for release id = %d", id));
+        log.info("Release info provided for release id = {}", id);
         return ResponseEntity.ok().body(releaseReadDto);
 
     }
 
-    @GetMapping(path = "/{id}/number-of-cancelled-tasks")
+    @GetMapping(path = "/{id}/tasksCancelled")
     @Operation(summary = "Посчитать незавершившиеся задачи", description = "Позволяет получить количество незавершившися в заданный релиз задач.")
     public ResponseEntity<Long> countCanceledTasksNumber(@PathVariable @Parameter(description = "Идентификатор релиза") long id) {
-        log.info(String.format("Release info for counting cancelled tasks requested for release id = %d", id));
+        log.info("Release info for counting cancelled tasks requested for release id = {}", id);
         Long count = releaseService.countCancelledForClosedRelease(id);
-        log.info(String.format("Release info for counting cancelled tasks provided for release id = %d", id));
+        log.info("Release info for counting cancelled tasks provided for release id = {}", id);
         return ResponseEntity.ok().body(count);
     }
 
@@ -67,7 +68,7 @@ public class ReleaseController {
     public ResponseEntity<Long> newRelease(@RequestBody ReleaseCreateDto release) throws BoardAppIncorrectIdException {
         log.info("Release creation requested.");
         Long id = releaseService.add(release);
-        log.info(String.format("Release created with id = %d", id));
+        log.info("Release created with id = {}", id);
         return ResponseEntity.ok().body(id);
     }
 
@@ -76,18 +77,18 @@ public class ReleaseController {
     public ResponseEntity updateRelease(@PathVariable @Parameter(description = "Идентификатор релиза") long id,
                                         @RequestParam @Parameter(description = "Версия релиза (опционально)") Optional<String> version,
                                         @RequestParam @Parameter(description = "Статус релиза (опционально)") Optional<ReleaseStatus> status) {
-        log.info(String.format("Release update requested for id = %d", id));
+        log.info("Release update requested for id = {}", id);
         releaseService.update(id, version, status);
-        log.info(String.format("Release update done for id = %d", id));
+        log.info("Release update done for id = {}", id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(path = "/{id}")
     @Operation(summary = "Удалить релиз", description = "Позволяет удалить релиз")
     public ResponseEntity deleteRelease(@PathVariable @Parameter(description = "Идентификатор релиза") long id) {
-        log.info(String.format("Release deletion requested for id = %d", id));
+        log.info("Release deletion requested for id = {}", id);
         releaseService.delete(id);
-        log.info(String.format("Release id = %d deleted", id));
+        log.info("Release id = {} deleted", id);
         return ResponseEntity.ok().build();
     }
 }
