@@ -18,7 +18,7 @@ public enum PersonRole {
         }
 
         Optional<PersonRole> personRole = Arrays.stream(PersonRole.values())
-                .filter( role -> role.name().equalsIgnoreCase(providedRole))
+                .filter(role -> role.name().equalsIgnoreCase(providedRole))
                 .findFirst();
 
         return personRole.orElseThrow(

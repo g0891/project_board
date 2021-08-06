@@ -30,7 +30,7 @@ public class PersonServiceImpl implements PersonService {
     private final PersonMapper personMapper;
     private final RoleRepository roleRepository;
 
-    @Autowired
+    //@Autowired
     public PersonServiceImpl(PersonRepository personRepository, PersonMapper personMapper, RoleRepository roleRepository) {
         this.personRepository = personRepository;
         this.personMapper = personMapper;
