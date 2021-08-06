@@ -1,4 +1,4 @@
-package com.example.board.rest.dto.project;
+package com.example.board.entity.project;
 
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
 import com.fasterxml.jackson.annotation.JsonCreator;

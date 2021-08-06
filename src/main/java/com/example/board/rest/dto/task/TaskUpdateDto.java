@@ -3,12 +3,8 @@ package com.example.board.rest.dto.task;
 import com.example.board.entity.task.TaskStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.time.LocalDateTime;
-
-@Schema(description = "Описание задачи для ответов")
-public class TaskReadDto {
-    @Schema(description = "Идентификатор задачи")
-    private long id;
+@Schema(description = "Описание задачи для обновления")
+public class TaskUpdateDto {
     @Schema(description = "Название задачи")
     private String name;
     @Schema(description = "Описание задачи")
@@ -21,32 +17,17 @@ public class TaskReadDto {
     private Long executorId;
     @Schema(description = "Идентификатор релиза")
     private long releaseId;
-    @Schema(description = "Дата создания")
-    private LocalDateTime createdOn;
-    @Schema(description = "Дата завершения")
-    private LocalDateTime doneOn;
 
-    public TaskReadDto() {
+    public TaskUpdateDto() {
     }
 
-    public TaskReadDto(long id, String name, String description, TaskStatus status, long authorId, Long executorId, long releaseId, LocalDateTime createdOn, LocalDateTime doneOn) {
-        this.id = id;
+    public TaskUpdateDto(String name, String description, TaskStatus status, int authorId, Long executorId, int releaseId) {
         this.name = name;
         this.description = description;
         this.status = status;
         this.authorId = authorId;
         this.executorId = executorId;
         this.releaseId = releaseId;
-        this.createdOn = createdOn;
-        this.doneOn = doneOn;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -95,21 +76,5 @@ public class TaskReadDto {
 
     public void setReleaseId(long releaseId) {
         this.releaseId = releaseId;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
-    }
-
-    public LocalDateTime getDoneOn() {
-        return doneOn;
-    }
-
-    public void setDoneOn(LocalDateTime doneOn) {
-        this.doneOn = doneOn;
     }
 }

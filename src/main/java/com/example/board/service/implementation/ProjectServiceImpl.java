@@ -1,18 +1,18 @@
 package com.example.board.service.implementation;
 
-import com.example.board.entity.PersonEntity;
-import com.example.board.entity.ProjectEntity;
+import com.example.board.entity.person.PersonEntity;
+import com.example.board.entity.project.ProjectEntity;
 import com.example.board.mapper.PersonMapper;
 import com.example.board.mapper.ProjectMapper;
 import com.example.board.repository.PersonRepository;
 import com.example.board.repository.ProjectRepository;
-import com.example.board.rest.dto.person.PersonRole;
+import com.example.board.entity.role.PersonRole;
 import com.example.board.rest.dto.project.ProjectCreateDto;
 import com.example.board.rest.dto.project.ProjectReadDto;
-import com.example.board.rest.dto.project.ProjectStatus;
+import com.example.board.entity.project.ProjectStatus;
 //import com.example.board.rest.dto.project.ProjectUpdateDto;
-import com.example.board.rest.dto.release.ReleaseStatus;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
+import com.example.board.entity.release.ReleaseStatus;
+import com.example.board.rest.dto.project.ProjectUpdateDto;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
@@ -66,7 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectEntity.getId();
     }
 
-    @Override
+    /*@Override
     public void update(long id,
                        Optional<String> newName,
                        Optional<String> newDescription,
@@ -106,6 +106,56 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectRepository.save(projectEntity);
 
+    }*/
+
+    @Override
+    public void update(long id, ProjectUpdateDto projectUpdateDto) {
+        ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
+                () -> new BoardAppIncorrectIdException(String.format("There is no project with id = %d", id))
+        );
+
+        if (projectEntity.getStatus() == ProjectStatus.CLOSED) {
+            throw new BoardAppIncorrectStateException("Can't change an already CLOSED project.");
+        }
+
+        ProjectStatus newStatus = projectUpdateDto.getStatus();
+        if (newStatus == ProjectStatus.CLOSED) {
+            if (projectEntity.getReleases().stream().anyMatch(release -> release.getStatus() != ReleaseStatus.CLOSED)) {
+                throw new BoardAppIncorrectStateException("Can't close the project containing a release in a not CLOSED state.");
+            }
+            projectEntity.setStatus(newStatus);
+        }
+
+        String newName = projectUpdateDto.getName();
+        if (newName != null) {
+            if (newName.isEmpty()) {
+                throw new IllegalArgumentException("Project name can't be an empty string");
+            }
+            projectEntity.setName(newName);
+        }
+
+        String newDescription = projectUpdateDto.getDescription();
+        if (newDescription != null) {
+            if (newDescription.isEmpty()) {
+                throw new IllegalArgumentException("Project description can't be an empty string");
+            }
+            projectEntity.setDescription(newDescription);
+        }
+
+        Long newCustomerId = projectUpdateDto.getCustomerId();
+        if (newCustomerId != null) {
+            PersonEntity personEntity = personRepository.findById(newCustomerId).orElseThrow(
+                    () -> new BoardAppIncorrectIdException(String.format("There is no customer with id = %d", newCustomerId))
+            );
+
+            if (!personMapper.roleEntitySetToPersonRoleSet(personEntity.getRoles()).contains(PersonRole.CUSTOMER)) {
+                throw new BoardAppIncorrectRoleException("A person can't be set as a customer for a project because the CUSTOMER role is missing.");
+            }
+
+            projectEntity.setCustomer(personEntity);
+        }
+
+        projectRepository.save(projectEntity);
     }
 
     @Override

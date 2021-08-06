@@ -1,4 +1,6 @@
-package com.example.board.entity;
+package com.example.board.entity.role;
+
+import com.example.board.entity.person.PersonEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

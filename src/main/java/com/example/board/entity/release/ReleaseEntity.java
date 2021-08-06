@@ -1,6 +1,7 @@
-package com.example.board.entity;
+package com.example.board.entity.release;
 
-import com.example.board.rest.dto.release.ReleaseStatus;
+import com.example.board.entity.project.ProjectEntity;
+import com.example.board.entity.task.TaskEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

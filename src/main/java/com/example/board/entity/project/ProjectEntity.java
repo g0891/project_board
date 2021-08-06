@@ -1,6 +1,7 @@
-package com.example.board.entity;
+package com.example.board.entity.project;
 
-import com.example.board.rest.dto.project.ProjectStatus;
+import com.example.board.entity.person.PersonEntity;
+import com.example.board.entity.release.ReleaseEntity;
 
 import javax.persistence.*;
 import java.util.List;

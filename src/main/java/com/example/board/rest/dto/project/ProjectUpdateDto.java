@@ -3,36 +3,25 @@ package com.example.board.rest.dto.project;
 import com.example.board.entity.project.ProjectStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Описание проекта для ответов")
-public class ProjectReadDto {
-    @Schema(description = "Идентификатор проекта")
-    private long id;
+@Schema(description = "Описание проекта для обновления")
+public class ProjectUpdateDto {
     @Schema(description = "Название проекта")
     private String name;
     @Schema(description = "Описание проекта")
     private String description;
     @Schema(description = "Идентификатор клиента")
-    private long customerId;
+    private Long customerId;
     @Schema(description = "Статус проекта")
     private ProjectStatus status;
 
-    public ProjectReadDto() {
+    public ProjectUpdateDto() {
     }
 
-    public ProjectReadDto(long id, String name, String description, long customerId, ProjectStatus status) {
-        this.id = id;
+    public ProjectUpdateDto(String name, String description, Long customerId, ProjectStatus status) {
         this.name = name;
         this.description = description;
         this.customerId = customerId;
         this.status = status;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -51,11 +40,11 @@ public class ProjectReadDto {
         this.description = description;
     }
 
-    public long getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(long customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 

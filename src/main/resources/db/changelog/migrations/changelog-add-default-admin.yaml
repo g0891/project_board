@@ -1,0 +1,36 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 000000-create-default-admin
+      author: g0891
+      changes:
+        - insert:
+            tableName: person
+            columns:
+              - column:
+                  name: id
+                  value: 4
+              - column:
+                  name: name
+                  value: admin
+              - column:
+                  name: password
+                  #default password is 'adminpassword'
+                  value: $2a$12$I0JOS4rvJqMj2URrlYPCAe9./pzy8WSiFYSKtxKBQI68vv7wcAx.W
+              - column:
+                  name: status
+                  value: ACTIVE
+        - insert:
+            tableName: person_role
+            columns:
+              - column:
+                  name: person_id
+                  value: 4
+              - column:
+                  name: role_id
+                  value: 4
+      rollback:
+        - sql:
+            sql: delete from person_role where person_id=4;
+        - sql:
+            sql: delete from person where id=4;

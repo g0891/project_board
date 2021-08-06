@@ -1,5 +1,6 @@
 package com.example.board.rest.controller;
 
+import com.example.board.entity.task.TaskStatus;
 import com.example.board.rest.dto.task.*;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.service.TaskService;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class TaskController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('tasks:read')")
     @Operation(summary = "Список задач", description = "Позволяет получить полный список задач")
     public ResponseEntity<List<TaskReadDto>> getTasks(){
         log.info("Task list requested");
@@ -40,6 +43,7 @@ public class TaskController {
     }
 
     @GetMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('tasks:read')")
     @Operation(summary = "Прочитать задачу", description = "Позволяет получить описание задачи")
     public ResponseEntity<TaskReadDto> getTask(@PathVariable @Parameter(description = "Идентификатор задачи") long id) {
         log.info("Task info requested for task id = {}", id);
@@ -48,7 +52,46 @@ public class TaskController {
         return ResponseEntity.ok().body(task);
     }
 
+   /* @GetMapping(path = "/filtering")
+    @PreAuthorize("hasAuthority('tasks:read')")
+    @Operation(summary = "Список задач", description = "Позволяет получить отфильтрованный список задач")
+    public ResponseEntity<List<TaskReadDto>> getTasksFiltered(
+            @RequestParam @Parameter(description = "Идентификатор задачи (опционально)") Optional<Long> id,
+            @RequestParam @Parameter(description = "Часть имени задачи (опционально)") Optional<String> name,
+            @RequestParam @Parameter(description = "Часть описания задачи (опционально)") Optional<String> description,
+            @RequestParam @Parameter(description = "Статус задачи (опционально)") Optional<TaskStatus> status,
+            @RequestParam @Parameter(description = "Идентификатор автора задачи (опционально)") Optional<Long> authorId,
+            @RequestParam @Parameter(description = "Идентификатор исполнителя задачи (опционально)") Optional<Long> executorId,
+            @RequestParam @Parameter(description = "Идентификатор релиза, в который входит задача (опционально)") Optional<Long> releaseId,
+            @RequestParam @Parameter(description = "Идентификатор проекта, в который входит задача (опционально)") Optional<Long> projectId
+    ) {
+        log.info("Task list filtered requested");
+        List<TaskReadDto> taskReadDtoList = taskService.getFiltered(
+                id.orElse(null),
+                name.orElse(null),
+                description.orElse(null),
+                status.orElse(null),
+                authorId.orElse(null),
+                executorId.orElse(null),
+                releaseId.orElse(null),
+                projectId.orElse(null)
+        );
+        log.info("Task list filtered provided.");
+        return ResponseEntity.ok().body(taskReadDtoList);
+    }*/
+
+    @PostMapping("/filtering")
+    @PreAuthorize("hasAuthority('tasks:read')")
+    @Operation(summary = "Список задач", description = "Позволяет получить отфильтрованный список задач")
+    public ResponseEntity<List<TaskReadDto>> getTasksFiltered(@RequestBody TaskSearchDto taskSearchDto) {
+        log.info("Task list filtered requested");
+        List<TaskReadDto> taskReadDtoList = taskService.getFiltered(taskSearchDto);
+        log.info("Task list filtered provided.");
+        return ResponseEntity.ok().body(taskReadDtoList);
+    }
+
     @PostMapping
+    @PreAuthorize("hasAuthority('tasks:write')")
     @Operation(summary = "Создать задачу", description = "Позволяет создать новую задачу")
     public ResponseEntity<Long> newTask(@RequestBody TaskCreateDto task) throws BoardAppIncorrectIdException {
         log.info("Task creation requested.");
@@ -57,7 +100,8 @@ public class TaskController {
         return ResponseEntity.ok().body(id);
     }
 
-    @PutMapping(path = "/{id}")
+    /*@PutMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('tasks:write')")
     @Operation(summary = "Обновить данные задачи", description = "Позволяет обновить данные по задаче")
     public ResponseEntity<String> updateTaskOpt(@PathVariable @Parameter(description = "Идентификатор задачи") long id,
                                         @Parameter(description = "Имя задачи (опционально)") @RequestParam Optional<String> name,
@@ -69,9 +113,22 @@ public class TaskController {
         taskService.update(id, name, description, status, executorId);
         log.info("Task update done for id = {}", id);
         return ResponseEntity.ok().build();
+    }*/
+
+    @PutMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('tasks:write')")
+    @Operation(summary = "Обновить данные задачи", description = "Позволяет обновить данные по задаче")
+    public ResponseEntity<String> updateTaskOpt(@PathVariable @Parameter(description = "Идентификатор задачи") long id,
+                                                @RequestBody TaskUpdateDto taskUpdateDto
+    ) {
+        log.info(String.format("Task update requested for id = %d", id));
+        taskService.update(id, taskUpdateDto);
+        log.info(String.format("Task update done for id = %d", id));
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('tasks:write')")
     @Operation(summary = "Удалить задачу", description = "Позволяет удалить задачу")
     public ResponseEntity deleteTask(@PathVariable @Parameter(description = "Идентификатор задачи") long id) {
         log.info("Task deletion requested for id = {}", id);

@@ -4,12 +4,11 @@ import com.example.board.entity.person.PersonStatus;
 import com.example.board.entity.role.PersonRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.List;
 import java.util.Set;
 
-@Schema(description = "Описание пользователя для ответов")
-public class PersonReadDto {
-    @Schema(description = "Идентификатор пользователя")
-    private long id;
+@Schema(description = "Описание пользователя для обновления")
+public class PersonUpdateDto {
     @Schema(description = "Имя пользователя")
     private String name;
     @Schema(description = "Список ролей пользователя пользователя")
@@ -17,19 +16,13 @@ public class PersonReadDto {
     @Schema(description = "Статус пользователя")
     private PersonStatus status;
 
-    public PersonReadDto(long id, String name, Set<PersonRole> roles, PersonStatus status) {
-        this.id = id;
+    public PersonUpdateDto() {
+    }
+
+    public PersonUpdateDto(String name, Set<PersonRole> roles, PersonStatus status) {
         this.name = name;
         this.roles = roles;
         this.status = status;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {

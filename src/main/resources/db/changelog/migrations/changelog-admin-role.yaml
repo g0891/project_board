@@ -1,0 +1,15 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 000000-create-admin-role
+      author: g0891
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  value: 4
+              - column:
+                  name: name
+                  value: ADMIN

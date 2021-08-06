@@ -1,16 +1,11 @@
-package com.example.board.entity;
+package com.example.board.entity.person;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.FetchType;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import java.util.List;
+import com.example.board.entity.role.RoleEntity;
+import com.example.board.entity.project.ProjectEntity;
+import com.example.board.entity.task.TaskEntity;
+import com.example.board.service.PersonService;
+
+import javax.persistence.*;
 import java.util.Set;
 
 
@@ -21,8 +16,11 @@ public class PersonEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String password;
+    @Enumerated(EnumType.STRING)
+    private PersonStatus status;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
@@ -41,9 +39,10 @@ public class PersonEntity {
     public PersonEntity() {
     }
 
-    public PersonEntity(long id, String name) {
-        this.id = id;
+    public PersonEntity(String name, String password, PersonStatus status) {
         this.name = name;
+        this.password = password;
+        this.status = status;
     }
 
     public PersonEntity(String name, Set<RoleEntity> roles) {
@@ -97,5 +96,21 @@ public class PersonEntity {
 
     public void setTasksWhereExecutor(Set<TaskEntity> tasksWhereExecutor) {
         this.tasksWhereExecutor = tasksWhereExecutor;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public PersonStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PersonStatus status) {
+        this.status = status;
     }
 }

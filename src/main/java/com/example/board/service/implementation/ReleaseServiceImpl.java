@@ -1,16 +1,16 @@
 package com.example.board.service.implementation;
 
-import com.example.board.entity.ProjectEntity;
-import com.example.board.entity.ReleaseEntity;
+import com.example.board.entity.release.ReleaseEntity;
 import com.example.board.mapper.ReleaseMapper;
 import com.example.board.repository.ProjectRepository;
 import com.example.board.repository.ReleaseRepository;
-import com.example.board.rest.dto.project.ProjectStatus;
+import com.example.board.entity.project.ProjectStatus;
 import com.example.board.rest.dto.release.ReleaseCreateDto;
 import com.example.board.rest.dto.release.ReleaseReadDto;
-import com.example.board.rest.dto.release.ReleaseStatus;
+import com.example.board.entity.release.ReleaseStatus;
 //import com.example.board.rest.dto.release.ReleaseUpdateDto;
-import com.example.board.rest.dto.task.TaskStatus;
+import com.example.board.entity.task.TaskStatus;
+import com.example.board.rest.dto.release.ReleaseUpdateDto;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
 import com.example.board.service.ReleaseService;
@@ -64,7 +64,7 @@ public class ReleaseServiceImpl implements ReleaseService {
         return releaseEntity.getId();
     }
 
-    @Override
+    /*@Override
     public void update(long id, Optional<String> newVersion, Optional<ReleaseStatus> newStatus) {
         ReleaseEntity releaseEntity = releaseRepository.findById(id).orElseThrow(
                 () -> new BoardAppIncorrectIdException(String.format("There is no release with id = %d", id))
@@ -86,6 +86,38 @@ public class ReleaseServiceImpl implements ReleaseService {
         }
 
         newVersion.ifPresent(releaseEntity::setVersion);
+
+        releaseRepository.save(releaseEntity);
+    }*/
+
+    @Override
+    public void update(long id, ReleaseUpdateDto releaseUpdateDto) {
+        ReleaseEntity releaseEntity = releaseRepository.findById(id).orElseThrow(
+                () -> new BoardAppIncorrectIdException(String.format("There is no release with id = %d", id))
+        );
+
+        if (releaseEntity.getStatus() == ReleaseStatus.CLOSED) {
+            throw new BoardAppIncorrectStateException("Can't change an already CLOSED release");
+        }
+
+        ReleaseStatus newReleaseStatus = releaseUpdateDto.getStatus();
+        if (newReleaseStatus == ReleaseStatus.CLOSED) {
+            releaseEntity.getTasks().stream()
+                    .forEach(task -> {if (task.getStatus() != TaskStatus.DONE && task.getStatus() != TaskStatus.CANCELED) {
+                        task.setStatus(TaskStatus.CANCELED);
+                        task.setDoneOn(LocalDateTime.now());
+                    }});
+            releaseEntity.setReleasedOn(LocalDateTime.now());
+            releaseEntity.setStatus(ReleaseStatus.CLOSED);
+        }
+
+        String newVersion = releaseUpdateDto.getVersion();
+        if (newVersion != null) {
+            if (newVersion.isEmpty()) {
+                throw new IllegalArgumentException("Release version can't be an empty string");
+            }
+            releaseEntity.setVersion(newVersion);
+        }
 
         releaseRepository.save(releaseEntity);
     }
