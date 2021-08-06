@@ -1,8 +1,8 @@
 package com.example.board.rest.errorController;
 
-import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
+import com.example.board.rest.errorController.exception.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ErrorHandleController {
 
+    private static final Logger log = LoggerFactory.getLogger(ErrorHandleController.class);
+
     @ExceptionHandler(value = {
             BoardAppIncorrectIdException.class,
             BoardAppIncorrectRoleException.class,
-            BoardAppIncorrectEnumException.class
+            BoardAppIncorrectEnumException.class,
+            BoardAppIncorrectStateException.class,
+            BoardAppConsistencyViolationException.class,
+            BoardAppPermissionViolationException.class
     })
     public ResponseEntity<ErrorResponse> handleOtherException(Exception e) {
         String msg;
@@ -27,6 +32,8 @@ public class ErrorHandleController {
         } else {
             msg = e.getMessage();
         }
+        log.warn(msg);
+        log.debug("Details:", e);
         return new ResponseEntity<>(new ErrorResponse(msg), HttpStatus.BAD_REQUEST);
     }
 

@@ -17,9 +17,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", imports = {ReleaseStatus.class, LocalDateTime.class})
 public abstract class ReleaseMapper {
-/*
-    @Autowired
-    ProjectRepository projectRepository;*/
 
     protected ProjectRepository projectRepository;
 
@@ -27,6 +24,7 @@ public abstract class ReleaseMapper {
     public void setProjectRepository(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
+
 
     @Mappings({
             @Mapping(target = "projectId", expression = "java(releaseEntity.getProject().getId())"),
@@ -47,6 +45,7 @@ public abstract class ReleaseMapper {
             @Mapping(target = "createdOn", expression = "java(LocalDateTime.now())"),
             @Mapping(target = "releasedOn", expression = "java(null)"),
             @Mapping(target = "project", source = "projectId"),
+            @Mapping(target = "tasks", ignore = true)
 /*
             // version - mapped automatically
             @Mapping(target = "version", source = "version"),

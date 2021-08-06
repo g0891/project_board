@@ -1,7 +1,7 @@
 package com.example.board.rest.errorController;
 
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultErrorHandleController {
 
-    @Autowired
-    Logger logger;
+    private final static Logger log = LoggerFactory.getLogger(DefaultErrorHandleController.class);
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        logger.trace("logging exception", e);
+        log.warn(e.getMessage());
+        log.debug("Details:", e);
         return new ResponseEntity<>(new ErrorResponse(String.format("Something unexpected happened: %s", e.getMessage())), HttpStatus.BAD_REQUEST);
     }
 }

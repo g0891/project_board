@@ -2,32 +2,44 @@ package com.example.board.service.implementation;
 
 import com.example.board.entity.PersonEntity;
 import com.example.board.entity.ProjectEntity;
+import com.example.board.mapper.PersonMapper;
 import com.example.board.mapper.ProjectMapper;
 import com.example.board.repository.PersonRepository;
 import com.example.board.repository.ProjectRepository;
+import com.example.board.rest.dto.person.PersonRole;
 import com.example.board.rest.dto.project.ProjectCreateDto;
 import com.example.board.rest.dto.project.ProjectReadDto;
 import com.example.board.rest.dto.project.ProjectStatus;
-import com.example.board.rest.dto.project.ProjectUpdateDto;
+//import com.example.board.rest.dto.project.ProjectUpdateDto;
+import com.example.board.rest.dto.release.ReleaseStatus;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
+import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
+import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
 import com.example.board.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class ProjectServiceImpl implements ProjectService {
-    @Autowired
-    ProjectRepository projectRepository;
+
+    private final ProjectRepository projectRepository;
+    private final PersonRepository personRepository;
+    private final ProjectMapper projectMapper;
+    private final PersonMapper personMapper;
 
     @Autowired
-    PersonRepository personRepository;
-
-    @Autowired
-    ProjectMapper projectMapper;
-
+    public ProjectServiceImpl(ProjectRepository projectRepository, PersonRepository personRepository, ProjectMapper projectMapper, PersonMapper personMapper) {
+        this.projectRepository = projectRepository;
+        this.personRepository = personRepository;
+        this.projectMapper = projectMapper;
+        this.personMapper = personMapper;
+    }
 
     @Override
     public ProjectReadDto getById(long id) throws BoardAppIncorrectIdException {
@@ -45,34 +57,67 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public long add(ProjectCreateDto project) throws BoardAppIncorrectIdException {
         ProjectEntity projectEntity = projectMapper.projectCreateDtoToProjectEntity(project);
+
+        if (!personMapper.roleEntitySetToPersonRoleSet(projectEntity.getCustomer().getRoles()).contains(PersonRole.CUSTOMER)) {
+            throw new BoardAppIncorrectRoleException("Only person with CUSTOMER role can be a customer of the project.");
+        }
+
         projectEntity = projectRepository.save(projectEntity);
         return projectEntity.getId();
     }
 
     @Override
-    public void update(long id, ProjectUpdateDto project) throws BoardAppIncorrectIdException {
+    public void update(long id,
+                       Optional<String> newName,
+                       Optional<String> newDescription,
+                       Optional<Long> newCustomerId,
+                       Optional<ProjectStatus> newStatus) {
+
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
                 () -> new BoardAppIncorrectIdException(String.format("There is no project with id = %d", id))
         );
 
-        PersonEntity personEntity = personRepository.findById(project.getCustomerId()).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no customer with id = %d", project.getCustomerId()))
-        );
+        if (projectEntity.getStatus() == ProjectStatus.CLOSED) {
+            throw new BoardAppIncorrectStateException("Can't change an already CLOSED project.");
+        }
 
-        projectEntity.setName(project.getName());
-        projectEntity.setDescription(project.getDescription());
-        projectEntity.setStatus(projectEntity.getStatus());
-        projectEntity.setCustomer(personEntity);
+        if (newStatus.isPresent() && newStatus.get() == ProjectStatus.CLOSED) {
+            if (projectEntity.getReleases().stream().anyMatch(release -> release.getStatus() != ReleaseStatus.CLOSED)) {
+                throw new BoardAppIncorrectStateException("Can't close the project containing a release in a not CLOSED state.");
+            }
+
+            projectEntity.setStatus(newStatus.get());
+        }
+
+        newName.ifPresent(projectEntity::setName);
+        newDescription.ifPresent(projectEntity::setDescription);
+
+        if (newCustomerId.isPresent()) {
+            PersonEntity personEntity = personRepository.findById(newCustomerId.get()).orElseThrow(
+                    () -> new BoardAppIncorrectIdException(String.format("There is no customer with id = %d", newCustomerId.get()))
+            );
+
+            if (!personMapper.roleEntitySetToPersonRoleSet(personEntity.getRoles()).contains(PersonRole.CUSTOMER)) {
+                throw new BoardAppIncorrectRoleException("A person can't be set as a customer for a project because the CUSTOMER role is missing.");
+            }
+
+            projectEntity.setCustomer(personEntity);
+        }
+
         projectRepository.save(projectEntity);
 
     }
 
     @Override
     public void delete(long id) throws BoardAppIncorrectIdException {
-        if (projectRepository.existsById(id)) {
-            projectRepository.deleteById(id);
-        } else {
-            throw new BoardAppIncorrectIdException(String.format("There is no project with id = %d", id));
+        ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
+                () -> new BoardAppIncorrectIdException(String.format("There is no project with id = %d", id))
+        );
+
+        if (!projectEntity.getReleases().isEmpty()) {
+            throw new BoardAppIncorrectStateException("Can't delete project with releases inside.");
         }
+
+        projectRepository.deleteById(id);
     }
 }

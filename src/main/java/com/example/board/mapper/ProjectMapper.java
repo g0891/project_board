@@ -16,8 +16,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", imports = {ProjectStatus.class})
 public abstract class ProjectMapper {
-/*    @Autowired
-    PersonRepository personRepository;*/
 
     protected PersonRepository personRepository;
 
@@ -26,11 +24,11 @@ public abstract class ProjectMapper {
         this.personRepository = personRepository;
     }
 
-
     @Mappings({
             @Mapping(target = "id", expression = "java(null)"),
             @Mapping(target = "status", expression = "java(ProjectStatus.OPEN)"),
-            @Mapping(target = "customer", source = "customerId")
+            @Mapping(target = "customer", source = "customerId"),
+            @Mapping(target = "releases", ignore = true)
 /*
             // name, description - mapped automatically
             @Mapping(target = "name", source = "project.name"),
