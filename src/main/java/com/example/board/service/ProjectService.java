@@ -2,22 +2,50 @@ package com.example.board.service;
 
 import com.example.board.rest.dto.project.ProjectCreateDto;
 import com.example.board.rest.dto.project.ProjectReadDto;
-import com.example.board.entity.project.ProjectStatus;
 import com.example.board.rest.dto.project.ProjectUpdateDto;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Interface for working with projects.
+ */
 public interface ProjectService {
-    ProjectReadDto getById(long id) throws BoardAppIncorrectIdException;
+    /**
+     * Searches and returns information about the project (if found).
+     * @param id An id of project to search for
+     * @return A project description
+     */
+    ProjectReadDto getById(long id);
+
+    /**
+     * Retrieving a complete list of projects.
+     * @return A list of existing projects
+     */
     List<ProjectReadDto> getAll();
-    long add(ProjectCreateDto project) throws BoardAppIncorrectIdException;
+
+    /**
+     * Used to add a new project.
+     * @param project A DTO with parameters required to create a new project
+     * @return An id of project created
+     */
+    long add(ProjectCreateDto project);
+
     /*void update(long id,
                 Optional<String> name,
                 Optional<String> description,
                 Optional<Long> customerId,
                 Optional<ProjectStatus> status);*/
+
+    /**
+     * Used to update project information.
+     * @param id An id of project to search for
+     * @param projectUpdateDto A DTO with parameters required to update a project
+     */
     void update(long id, ProjectUpdateDto projectUpdateDto);
-    void delete(long id) throws BoardAppIncorrectIdException;
+
+    /**
+     * Deletes a project from the system.
+     * @param id An id of project to search for
+     */
+    void delete(long id);
 }

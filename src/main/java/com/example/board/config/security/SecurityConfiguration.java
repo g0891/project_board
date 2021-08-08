@@ -1,5 +1,6 @@
 package com.example.board.config.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -18,9 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
+    private final String apiPath;
 
-    public SecurityConfiguration(/*@Qualifier(value = "myUserDetailsService")*/ UserDetailsService userDetailsService) {
+    public SecurityConfiguration(/*@Qualifier(value = "myUserDetailsService")*/ UserDetailsService userDetailsService, @Value("${api.path}") String apiPath) {
         this.userDetailsService = userDetailsService;
+        this.apiPath = apiPath;
     }
 
     @Override
@@ -28,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/persons/register").not().authenticated()
+                    .antMatchers(apiPath + "/persons/register").not().authenticated()
                 /*.antMatchers(HttpMethod.GET, "/projects/**")
                     .hasAuthority(Permission.PROJECTS_READ.getPermission())
                 .antMatchers("/projects/**")
@@ -79,4 +82,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         return daoAuthenticationProvider;
     }
+
 }

@@ -18,7 +18,8 @@ public class DefaultErrorHandleController {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.warn(e.getMessage());
-        log.debug("Details:", e);
+        log.debug("Details:", e.getCause());
+        e.printStackTrace();
         return new ResponseEntity<>(new ErrorResponse(String.format("Something unexpected happened: %s", e.getMessage())), HttpStatus.BAD_REQUEST);
     }
 }

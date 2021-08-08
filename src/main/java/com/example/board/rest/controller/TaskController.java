@@ -3,6 +3,7 @@ package com.example.board.rest.controller;
 import com.example.board.entity.task.TaskStatus;
 import com.example.board.rest.dto.task.*;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
+import com.example.board.service.StorageService;
 import com.example.board.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -98,6 +100,17 @@ public class TaskController {
         Long id = taskService.add(task);
         log.info("Task created with id = {}", id);
         return ResponseEntity.ok().body(id);
+    }
+
+    @PostMapping("/uploadCSV")
+    @PreAuthorize("hasAuthority('tasks:write')")
+    @Operation(summary = "Создать задачу", description = "Позволяет создать новую задачу путем загрузки CSV файла")
+    public ResponseEntity<Long> newTaskFromCsv(@RequestParam("file") MultipartFile file){
+        log.info("Creating task from CSV.");
+        Long id = taskService.add(file);
+        log.info("Task with id = {} created", id);
+        return ResponseEntity.ok().body(id);
+
     }
 
     /*@PutMapping(path = "/{id}")

@@ -23,7 +23,8 @@ public class ErrorHandleController {
             BoardAppIncorrectEnumException.class,
             BoardAppIncorrectStateException.class,
             BoardAppConsistencyViolationException.class,
-            BoardAppPermissionViolationException.class
+            BoardAppPermissionViolationException.class,
+            IllegalArgumentException.class
     })
     public ResponseEntity<ErrorResponse> handleOtherException(Exception e) {
         String msg;

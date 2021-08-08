@@ -13,15 +13,26 @@ import com.example.board.rest.dto.task.*;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
+import com.example.board.rest.errorController.exception.BoardAppStorageException;
+import com.example.board.service.StorageService;
 import com.example.board.service.TaskService;
 import com.example.board.service.specification.TaskSpecification;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.time.LocalDateTime;
+import java.util.IllegalFormatException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,13 +44,16 @@ public class TaskServiceImpl implements TaskService {
     private final PersonRepository personRepository;
     private final TaskMapper taskMapper;
     private final PersonMapper personMapper;
+    private final StorageService storageService;
+
 
     //@Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, PersonRepository personRepository, TaskMapper taskMapper, PersonMapper personMapper) {
+    public TaskServiceImpl(TaskRepository taskRepository, PersonRepository personRepository, TaskMapper taskMapper, PersonMapper personMapper, StorageService storageService) {
         this.taskRepository = taskRepository;
         this.personRepository = personRepository;
         this.taskMapper = taskMapper;
         this.personMapper = personMapper;
+        this.storageService = storageService;
     }
 
     @Override
@@ -90,7 +104,80 @@ public class TaskServiceImpl implements TaskService {
         return taskEntity.getId();
     }
 
-/*    @Override
+    @Override
+    public long add(MultipartFile file) {
+
+        String filepath = storageService.store(file);
+
+        try (Reader in = new FileReader(filepath)){
+            CSVFormat format = CSVFormat.Builder
+                    .create(CSVFormat.RFC4180)
+                    .setHeader(TaskCreateDto.fields)
+                    .build();
+
+            Iterable<CSVRecord> records = format.parse(in);
+            Iterator<CSVRecord> iterator = records.iterator();
+            if (iterator.hasNext()) {
+                CSVRecord record = iterator.next();
+
+                String name = record.get("name");
+                if (name == null || name.isEmpty()) {
+                    throw new IllegalArgumentException("Task name can't be an empty string");
+                }
+
+                String description = record.get("description");
+                if (description == null || description.isEmpty()) {
+                    throw new IllegalArgumentException("Task description can't be an empty string");
+                }
+
+                long authorId;
+                String authorIdString = record.get("authorId");
+                if (authorIdString == null || authorIdString.isEmpty()) {
+                    throw new IllegalArgumentException("Task should have an author defined");
+                } else {
+                    try {
+                        authorId = Long.parseLong(authorIdString);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Author id should have a valid number format.");
+                    }
+                }
+
+                long releaseId;
+                String releaseIdString = record.get("releaseId");
+                if (releaseIdString == null || releaseIdString.isEmpty()) {
+                    throw new IllegalArgumentException("Task should have a release defined");
+                } else {
+                    try {
+                        releaseId = Long.parseLong(releaseIdString);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Release id should have a valid number format.");
+                    }
+                }
+
+                Long executorId;
+                String executorIdString = record.get("executorId");
+                if (executorIdString == null || executorIdString.isEmpty()) {
+                    executorId = null;
+                } else {
+                    try {
+                        executorId = Long.parseLong(executorIdString);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Executor id should have a valid number format.");
+                    }
+                }
+
+                return this.add(new TaskCreateDto(name, description, authorId, executorId, releaseId));
+            } else {
+                throw new IllegalArgumentException("There are no records in CSV file");
+            }
+        } catch (FileNotFoundException ex) {
+            throw new BoardAppStorageException("Uploaded file can't be founded.");
+        } catch (IOException ex) {
+            throw new BoardAppStorageException("Uploaded file can't be read.");
+        }
+    }
+
+    /*    @Override
     public void update(long id,
                        Optional<String> updatedName,
                        Optional<String> updatedDescription,

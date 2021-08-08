@@ -1,9 +1,12 @@
 package com.example.board.rest.dto.task;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import liquibase.pro.packaged.S;
 
 @Schema(description = "Описание задачи для создания")
 public class TaskCreateDto {
+    public static String[] fields = {"name", "description", "authorId", "executorId", "releaseId"};
+
     @Schema(description = "Название задачи")
     private String name;
     @Schema(description = "Описание задачи")

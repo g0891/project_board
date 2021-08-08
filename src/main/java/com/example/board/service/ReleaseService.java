@@ -9,14 +9,51 @@ import com.example.board.rest.errorController.exception.BoardAppIncorrectIdExcep
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Interface for working with releases.
+ */
 public interface ReleaseService {
-    ReleaseReadDto getById(long id) throws BoardAppIncorrectIdException;
+    /**
+     * Searches and returns information about the release (if found).
+     * @param id An id of release to search for
+     * @return A release description
+     */
+    ReleaseReadDto getById(long id);
+
+    /**
+     * Retrieving a complete list of releases.
+     * @return A list of existing releases
+     */
     List<ReleaseReadDto> getAll();
-    long add(ReleaseCreateDto project) throws BoardAppIncorrectIdException;
+
+    /**
+     * Used to add a release
+     * @param release A DTO with parameters required to create a new release
+     * @return An id of release created
+     */
+    long add(ReleaseCreateDto release);
+
     /*void update(long id,
                 Optional<String> newVersion,
                 Optional<ReleaseStatus> newStatus);*/
+
+    /**
+     * Used to update release information.
+     * @param id An id of release to search for
+     * @param releaseUpdateDto A DTO with parameters required to update a release
+     */
     void update(long id, ReleaseUpdateDto releaseUpdateDto);
-    void delete(long id) throws BoardAppIncorrectIdException;
+
+    /**
+     * Deletes a release from the system.
+     * @param id An id of release to search for
+     */
+    void delete(long id);
+
+    /**
+     * Counts uncompleted task in a closed release.
+     * @param id An id of release to search for
+     * @return A number of uncompleted tasks
+     */
     long countCancelledForClosedRelease(long id);
 }
