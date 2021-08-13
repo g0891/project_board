@@ -53,8 +53,8 @@ public class ReleaseServiceImpl implements ReleaseService {
     public long add(ReleaseCreateDto release) throws BoardAppIncorrectIdException {
         ReleaseEntity releaseEntity = releaseMapper.releaseCreateDtoToReleaseEntity(release);
 
-        if (releaseEntity.getProject().getStatus() == ProjectStatus.CLOSED) {
-            throw new BoardAppIncorrectStateException("Can't add release to the CLOSED project.");
+        if (releaseEntity.getProject().getStatus() != ProjectStatus.STARTED) {
+            throw new BoardAppIncorrectStateException("The project should be STARTED to add releases.");
         }
 
         releaseEntity = releaseRepository.save(releaseEntity);

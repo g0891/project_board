@@ -15,14 +15,16 @@ public enum PersonRole {
             Permission.PROJECTS_READ,
             Permission.PROJECTS_WRITE,
             Permission.RELEASES_READ,
-            Permission.TASKS_READ
+            Permission.TASKS_READ,
+            Permission.BANKING_MANAGEMENT
     )),
     AUTHOR(Set.of(
             Permission.PROJECTS_READ,
             Permission.RELEASES_WRITE,
             Permission.RELEASES_READ,
             Permission.TASKS_READ,
-            Permission.TASKS_WRITE
+            Permission.TASKS_WRITE,
+            Permission.BANKING_VERIFY_PAYMENT
     )),
     EXECUTOR(Set.of(
             Permission.PROJECTS_READ,

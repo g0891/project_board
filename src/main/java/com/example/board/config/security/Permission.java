@@ -8,7 +8,9 @@ public enum Permission {
     TASKS_READ("tasks:read"),
     TASKS_WRITE("tasks:write"),
     PERSONS_READ("persons:read"),
-    PERSONS_WRITE("persons:write");
+    PERSONS_WRITE("persons:write"),
+    BANKING_MANAGEMENT("banking:management"),
+    BANKING_VERIFY_PAYMENT("banking:verifyPayment");
 
     private final String permission;
 

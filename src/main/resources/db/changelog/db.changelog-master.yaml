@@ -11,4 +11,5 @@ databaseChangeLog:
   - include: { relativeToChangelogFile: true, file: migrations/changelog-admin-role.yaml}
   - include: { relativeToChangelogFile: true, file: migrations/changelog-person-table-add-password.yaml}
   - include: { relativeToChangelogFile: true, file: migrations/changelog-add-default-admin.yaml}
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-project-add-cost.yaml}
 
