@@ -1,6 +1,5 @@
 package com.example.board.entity.person;
 
-import com.example.board.entity.project.ProjectStatus;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 

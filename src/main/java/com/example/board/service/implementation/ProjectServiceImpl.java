@@ -2,27 +2,24 @@ package com.example.board.service.implementation;
 
 import com.example.board.entity.person.PersonEntity;
 import com.example.board.entity.project.ProjectEntity;
+import com.example.board.entity.project.ProjectStatus;
+import com.example.board.entity.release.ReleaseStatus;
+import com.example.board.entity.role.PersonRole;
 import com.example.board.mapper.PersonMapper;
 import com.example.board.mapper.ProjectMapper;
 import com.example.board.repository.PersonRepository;
 import com.example.board.repository.ProjectRepository;
-import com.example.board.entity.role.PersonRole;
 import com.example.board.rest.dto.project.ProjectCreateDto;
 import com.example.board.rest.dto.project.ProjectReadDto;
-import com.example.board.entity.project.ProjectStatus;
-//import com.example.board.rest.dto.project.ProjectUpdateDto;
-import com.example.board.entity.release.ReleaseStatus;
 import com.example.board.rest.dto.project.ProjectUpdateDto;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
 import com.example.board.service.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional

@@ -1,15 +1,12 @@
 package com.example.board.mapper;
 
 import com.example.board.entity.person.PersonEntity;
+import com.example.board.entity.role.PersonRole;
 import com.example.board.entity.role.RoleEntity;
 import com.example.board.repository.RoleRepository;
-//import com.example.board.rest.dto.person.PersonCreateDto;
 import com.example.board.rest.dto.person.PersonReadDto;
-import com.example.board.entity.role.PersonRole;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

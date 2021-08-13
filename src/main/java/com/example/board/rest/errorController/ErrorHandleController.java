@@ -1,6 +1,11 @@
 package com.example.board.rest.errorController;
 
-import com.example.board.rest.errorController.exception.*;
+import com.example.board.rest.errorController.exception.BoardAppConsistencyViolationException;
+import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
+import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
+import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
+import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
+import com.example.board.rest.errorController.exception.BoardAppPermissionViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;

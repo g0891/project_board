@@ -1,9 +1,8 @@
 package com.example.board.rest.controller;
 
 //import com.example.board.rest.dto.person.PersonCreateDto;
+
 import com.example.board.rest.dto.person.PersonReadDto;
-import com.example.board.entity.role.PersonRole;
-//import com.example.board.rest.dto.person.PersonUpdateDto;
 import com.example.board.rest.dto.person.PersonRegisterDto;
 import com.example.board.rest.dto.person.PersonUpdateDto;
 import com.example.board.service.PersonService;
@@ -12,14 +11,18 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("${api.path}/persons")

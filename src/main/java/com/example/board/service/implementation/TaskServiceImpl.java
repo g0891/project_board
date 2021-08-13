@@ -1,15 +1,18 @@
 package com.example.board.service.implementation;
 
 import com.example.board.entity.person.PersonEntity;
+import com.example.board.entity.release.ReleaseStatus;
+import com.example.board.entity.role.PersonRole;
 import com.example.board.entity.task.TaskEntity;
 import com.example.board.entity.task.TaskStatus;
 import com.example.board.mapper.PersonMapper;
 import com.example.board.mapper.TaskMapper;
 import com.example.board.repository.PersonRepository;
 import com.example.board.repository.TaskRepository;
-import com.example.board.entity.role.PersonRole;
-import com.example.board.entity.release.ReleaseStatus;
-import com.example.board.rest.dto.task.*;
+import com.example.board.rest.dto.task.TaskCreateDto;
+import com.example.board.rest.dto.task.TaskReadDto;
+import com.example.board.rest.dto.task.TaskSearchDto;
+import com.example.board.rest.dto.task.TaskUpdateDto;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
@@ -19,22 +22,19 @@ import com.example.board.service.TaskService;
 import com.example.board.service.specification.TaskSpecification;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.time.LocalDateTime;
-import java.util.IllegalFormatException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -269,14 +269,16 @@ public class TaskServiceImpl implements TaskService {
         if (newTaskStatus != null) {
             TaskStatus currentStatus = taskEntity.getStatus();
             if (currentStatus == TaskStatus.BACKLOG
-                    && newTaskStatus != TaskStatus.IN_PROGRESS
-                    && newTaskStatus != TaskStatus.CANCELED) {
+                    && Set.of(TaskStatus.IN_PROGRESS, TaskStatus.CANCELED).contains(newTaskStatus)
+ /*                   && newTaskStatus != TaskStatus.IN_PROGRESS
+                    && newTaskStatus != TaskStatus.CANCELED*/) {
                 throw new BoardAppIncorrectStateException("Task in BACKLOG status can be moved to IN_PROGRESS or CANCELED status only.");
             }
 
             if (currentStatus == TaskStatus.IN_PROGRESS
-                    && newTaskStatus != TaskStatus.DONE
-                    && newTaskStatus != TaskStatus.CANCELED) {
+                    && Set.of(TaskStatus.CANCELED, TaskStatus.DONE).contains(newTaskStatus)
+                   /* && newTaskStatus != TaskStatus.DONE
+                    && newTaskStatus != TaskStatus.CANCELED*/) {
                 throw new BoardAppIncorrectStateException("Task in IN_PROGRESS status can be moved to DONE or CANCELED status only.");
             }
 
@@ -286,7 +288,8 @@ public class TaskServiceImpl implements TaskService {
                 throw new BoardAppIncorrectStateException("Task can't be moved to IN_PROGRESS without defining an executor");
             }
 
-            if (newTaskStatus == TaskStatus.CANCELED || newTaskStatus == TaskStatus.DONE) {
+            if (Set.of(TaskStatus.CANCELED, TaskStatus.DONE).contains(newTaskStatus)
+                    /*newTaskStatus == TaskStatus.CANCELED || newTaskStatus == TaskStatus.DONE*/) {
                 taskEntity.setDoneOn(LocalDateTime.now());
             }
 

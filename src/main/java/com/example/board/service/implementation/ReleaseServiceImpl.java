@@ -1,26 +1,23 @@
 package com.example.board.service.implementation;
 
+import com.example.board.entity.project.ProjectStatus;
 import com.example.board.entity.release.ReleaseEntity;
+import com.example.board.entity.release.ReleaseStatus;
+import com.example.board.entity.task.TaskStatus;
 import com.example.board.mapper.ReleaseMapper;
 import com.example.board.repository.ProjectRepository;
 import com.example.board.repository.ReleaseRepository;
-import com.example.board.entity.project.ProjectStatus;
 import com.example.board.rest.dto.release.ReleaseCreateDto;
 import com.example.board.rest.dto.release.ReleaseReadDto;
-import com.example.board.entity.release.ReleaseStatus;
-//import com.example.board.rest.dto.release.ReleaseUpdateDto;
-import com.example.board.entity.task.TaskStatus;
 import com.example.board.rest.dto.release.ReleaseUpdateDto;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
 import com.example.board.service.ReleaseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional

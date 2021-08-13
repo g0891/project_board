@@ -1,15 +1,12 @@
 package com.example.board.service;
 
 //import com.example.board.rest.dto.person.PersonCreateDto;
+
 import com.example.board.rest.dto.person.PersonReadDto;
-import com.example.board.entity.role.PersonRole;
 import com.example.board.rest.dto.person.PersonRegisterDto;
 import com.example.board.rest.dto.person.PersonUpdateDto;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * Interface for working with persons.

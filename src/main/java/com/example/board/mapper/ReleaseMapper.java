@@ -2,10 +2,10 @@ package com.example.board.mapper;
 
 import com.example.board.entity.project.ProjectEntity;
 import com.example.board.entity.release.ReleaseEntity;
+import com.example.board.entity.release.ReleaseStatus;
 import com.example.board.repository.ProjectRepository;
 import com.example.board.rest.dto.release.ReleaseCreateDto;
 import com.example.board.rest.dto.release.ReleaseReadDto;
-import com.example.board.entity.release.ReleaseStatus;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

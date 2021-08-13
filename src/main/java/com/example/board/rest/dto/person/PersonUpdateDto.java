@@ -4,7 +4,6 @@ import com.example.board.entity.person.PersonStatus;
 import com.example.board.entity.role.PersonRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.List;
 import java.util.Set;
 
 @Schema(description = "Описание пользователя для обновления")

@@ -6,17 +6,14 @@ import com.example.board.entity.role.RoleEntity;
 import com.example.board.mapper.PersonMapper;
 import com.example.board.repository.PersonRepository;
 import com.example.board.repository.RoleRepository;
-//import com.example.board.rest.dto.person.PersonCreateDto;
 import com.example.board.rest.dto.person.PersonReadDto;
-import com.example.board.entity.role.PersonRole;
-//import com.example.board.rest.dto.person.PersonUpdateDto;
 import com.example.board.rest.dto.person.PersonRegisterDto;
 import com.example.board.rest.dto.person.PersonUpdateDto;
 import com.example.board.rest.errorController.exception.BoardAppConsistencyViolationException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.service.PersonService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,8 +64,11 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public long register(PersonRegisterDto personRegisterDto) {
-        if (personRegisterDto == null || personRegisterDto.getName() == null || personRegisterDto.getName().equals("") ||
-        personRegisterDto.getPassword() == null || personRegisterDto.getPassword().equals("")) {
+        if (
+                personRegisterDto == null ||
+                StringUtils.isBlank(personRegisterDto.getName()) ||
+                StringUtils.isBlank(personRegisterDto.getPassword())
+        ) {
             throw new IllegalArgumentException("Both username and password should not be empty");
         }
         PersonEntity personEntity = new PersonEntity(
@@ -111,12 +111,13 @@ public class PersonServiceImpl implements PersonService {
         if (newName != null){
             if (newName.isEmpty()) {
                 throw new IllegalArgumentException("Person name can't be null or empty string");
-            } else {
-                Optional<PersonEntity> sameNamePerson = personRepository.findByName(newName);
-                if (sameNamePerson.isPresent() && !sameNamePerson.get().getId().equals(personEntity.getId())) {
-                    throw new IllegalArgumentException("Person name is already used for another user");
-                }
             }
+
+            Optional<PersonEntity> sameNamePerson = personRepository.findByName(newName);
+            if (sameNamePerson.isPresent() && !sameNamePerson.get().getId().equals(personEntity.getId())) {
+                throw new IllegalArgumentException("Person name is already used for another user");
+            }
+
             personEntity.setName(newName);
         }
 

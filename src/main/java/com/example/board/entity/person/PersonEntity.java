@@ -1,11 +1,21 @@
 package com.example.board.entity.person;
 
-import com.example.board.entity.role.RoleEntity;
 import com.example.board.entity.project.ProjectEntity;
+import com.example.board.entity.role.RoleEntity;
 import com.example.board.entity.task.TaskEntity;
-import com.example.board.service.PersonService;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 

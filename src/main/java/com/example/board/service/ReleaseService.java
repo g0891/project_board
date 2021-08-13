@@ -2,12 +2,9 @@ package com.example.board.service;
 
 import com.example.board.rest.dto.release.ReleaseCreateDto;
 import com.example.board.rest.dto.release.ReleaseReadDto;
-import com.example.board.entity.release.ReleaseStatus;
 import com.example.board.rest.dto.release.ReleaseUpdateDto;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Interface for working with releases.

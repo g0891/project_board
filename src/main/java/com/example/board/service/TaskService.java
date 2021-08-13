@@ -1,14 +1,12 @@
 package com.example.board.service;
 
-import com.example.board.entity.task.TaskStatus;
-import com.example.board.rest.dto.task.*;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
+import com.example.board.rest.dto.task.TaskCreateDto;
+import com.example.board.rest.dto.task.TaskReadDto;
+import com.example.board.rest.dto.task.TaskSearchDto;
+import com.example.board.rest.dto.task.TaskUpdateDto;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Interface for working with tasks.
