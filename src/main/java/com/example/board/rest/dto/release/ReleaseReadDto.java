@@ -1,5 +1,6 @@
 package com.example.board.rest.dto.release;
 
+import com.example.board.entity.release.ReleaseStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;

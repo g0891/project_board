@@ -1,5 +1,7 @@
+/*
 package com.example.board.rest.dto.person;
 
+import com.example.board.entity.role.PersonRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
@@ -35,3 +37,4 @@ public class PersonCreateDto {
         this.roles = roles;
     }
 }
+*/

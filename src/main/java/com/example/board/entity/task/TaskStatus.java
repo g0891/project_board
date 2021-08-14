@@ -1,9 +1,7 @@
-package com.example.board.rest.dto.task;
+package com.example.board.entity.task;
 
-import com.example.board.rest.dto.person.PersonRole;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import org.springframework.scheduling.config.Task;
 
 import java.util.Arrays;
 import java.util.Optional;

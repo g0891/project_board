@@ -1,6 +1,5 @@
-package com.example.board.rest.dto.release;
+package com.example.board.entity.release;
 
-import com.example.board.rest.dto.project.ProjectStatus;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 

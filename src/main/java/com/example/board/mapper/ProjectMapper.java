@@ -1,11 +1,11 @@
 package com.example.board.mapper;
 
-import com.example.board.entity.PersonEntity;
-import com.example.board.entity.ProjectEntity;
+import com.example.board.entity.person.PersonEntity;
+import com.example.board.entity.project.ProjectEntity;
+import com.example.board.entity.project.ProjectStatus;
 import com.example.board.repository.PersonRepository;
 import com.example.board.rest.dto.project.ProjectCreateDto;
 import com.example.board.rest.dto.project.ProjectReadDto;
-import com.example.board.rest.dto.project.ProjectStatus;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

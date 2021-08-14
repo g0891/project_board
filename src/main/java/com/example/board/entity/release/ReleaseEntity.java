@@ -1,8 +1,20 @@
-package com.example.board.entity;
+package com.example.board.entity.release;
 
-import com.example.board.rest.dto.release.ReleaseStatus;
+import com.example.board.entity.project.ProjectEntity;
+import com.example.board.entity.task.TaskEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 

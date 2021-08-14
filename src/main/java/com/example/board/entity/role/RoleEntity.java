@@ -1,11 +1,13 @@
-package com.example.board.entity;
+package com.example.board.entity.role;
+
+import com.example.board.entity.person.PersonEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity

@@ -8,5 +8,7 @@ databaseChangeLog:
   - include: { relativeToChangelogFile: true, file: migrations/changelog-task-table.yaml}
   - include: { relativeToChangelogFile: true, file: migrations/changelog-hibernate-sequence.yaml}
   - include: { relativeToChangelogFile: true, file: migrations/changelog-populate-with-sample-data.yaml}
-
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-admin-role.yaml}
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-person-table-add-password.yaml}
+  - include: { relativeToChangelogFile: true, file: migrations/changelog-add-default-admin.yaml}
 
