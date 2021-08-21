@@ -13,15 +13,19 @@ public class ProjectUpdateDto {
     private Long customerId;
     @Schema(description = "Статус проекта")
     private ProjectStatus status;
+    @Schema(description = "Стоимость проекта")
+    private Long cost;
+
 
     public ProjectUpdateDto() {
     }
 
-    public ProjectUpdateDto(String name, String description, Long customerId, ProjectStatus status) {
+    public ProjectUpdateDto(String name, String description, Long customerId, ProjectStatus status, Long cost) {
         this.name = name;
         this.description = description;
         this.customerId = customerId;
         this.status = status;
+        this.cost = cost;
     }
 
     public String getName() {
@@ -54,5 +58,13 @@ public class ProjectUpdateDto {
 
     public void setStatus(ProjectStatus projectStatus) {
         this.status = projectStatus;
+    }
+
+    public Long getCost() {
+        return cost;
+    }
+
+    public void setCost(Long cost) {
+        this.cost = cost;
     }
 }

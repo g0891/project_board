@@ -12,12 +12,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SecurityUser implements UserDetails {
+    private final long id;
     private final String username;
     private final String password;
     private final Set<SimpleGrantedAuthority> authorities;
     private final boolean isActive;
 
-    public SecurityUser(String username, String password, Set<SimpleGrantedAuthority> authorities, boolean isActive) {
+    public SecurityUser(long id, String username, String password, Set<SimpleGrantedAuthority> authorities, boolean isActive) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -27,6 +29,10 @@ public class SecurityUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Override
@@ -61,6 +67,7 @@ public class SecurityUser implements UserDetails {
 
     public static SecurityUser fromPersonEntity(PersonEntity personEntity) {
         return new SecurityUser(
+                personEntity.getId(),
                 personEntity.getName(),
                 personEntity.getPassword(),
                 personEntity.getRoles()

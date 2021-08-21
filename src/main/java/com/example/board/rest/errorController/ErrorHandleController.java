@@ -1,6 +1,7 @@
 package com.example.board.rest.errorController;
 
 import com.example.board.rest.errorController.exception.BoardAppConsistencyViolationException;
+import com.example.board.rest.errorController.exception.BoardAppExternalMicroserviceException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
@@ -29,7 +30,8 @@ public class ErrorHandleController {
             BoardAppIncorrectStateException.class,
             BoardAppConsistencyViolationException.class,
             BoardAppPermissionViolationException.class,
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            BoardAppExternalMicroserviceException.class
     })
     public ResponseEntity<ErrorResponse> handleOtherException(Exception e) {
         String msg;

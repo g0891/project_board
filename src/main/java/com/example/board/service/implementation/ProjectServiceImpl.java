@@ -5,6 +5,7 @@ import com.example.board.entity.project.ProjectEntity;
 import com.example.board.entity.project.ProjectStatus;
 import com.example.board.entity.release.ReleaseStatus;
 import com.example.board.entity.role.PersonRole;
+import com.example.board.feign.BankingService;
 import com.example.board.mapper.PersonMapper;
 import com.example.board.mapper.ProjectMapper;
 import com.example.board.repository.PersonRepository;
@@ -16,6 +17,7 @@ import com.example.board.rest.errorController.exception.BoardAppIncorrectIdExcep
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
 import com.example.board.service.ProjectService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +31,15 @@ public class ProjectServiceImpl implements ProjectService {
     private final PersonRepository personRepository;
     private final ProjectMapper projectMapper;
     private final PersonMapper personMapper;
+    private final BankingService bankingService;
 
     //@Autowired
-    public ProjectServiceImpl(ProjectRepository projectRepository, PersonRepository personRepository, ProjectMapper projectMapper, PersonMapper personMapper) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, PersonRepository personRepository, ProjectMapper projectMapper, PersonMapper personMapper, BankingService bankingService) {
         this.projectRepository = projectRepository;
         this.personRepository = personRepository;
         this.projectMapper = projectMapper;
         this.personMapper = personMapper;
+        this.bankingService = bankingService;
     }
 
     @Override
@@ -115,13 +119,52 @@ public class ProjectServiceImpl implements ProjectService {
             throw new BoardAppIncorrectStateException("Can't change an already CLOSED project.");
         }
 
+        Long newCost = projectUpdateDto.getCost();
+        if (newCost != null) {
+            if(projectEntity.getStatus() != ProjectStatus.OPEN) {
+                throw new BoardAppIncorrectStateException("Can't change cost of a project in a non OPEN state.");
+            }
+            if (newCost < 0) {
+                throw new IllegalArgumentException("The cost could not be less than 0.");
+            }
+
+            projectEntity.setCost(newCost);
+        }
+
+
         ProjectStatus newStatus = projectUpdateDto.getStatus();
-        if (newStatus == ProjectStatus.CLOSED) {
+
+        if (newStatus != null && projectEntity.getStatus() != newStatus) {
+            switch (newStatus) {
+                case CLOSED:
+                    if (projectEntity.getReleases().stream().anyMatch(release -> release.getStatus() != ReleaseStatus.CLOSED)) {
+                        throw new BoardAppIncorrectStateException("Can't close the project containing a release in a not CLOSED state.");
+                    }
+                    projectEntity.setStatus(newStatus);
+                    break;
+                case OPEN:
+                    throw new BoardAppIncorrectStateException("Can't change project status back to OPEN.");
+                    //break;
+                case STARTED:
+                    if (projectEntity.getCost() == null) {
+                        throw new BoardAppIncorrectStateException("Project cost should be defined first.");
+                    }
+                    ResponseEntity<Long> response = bankingService.getTotalPaymentsForProject(projectEntity.getId());
+                    if (response == null || response.getBody() == null || response.getBody() < projectEntity.getCost()) {
+                        throw new BoardAppIncorrectStateException("Customer should pay a proper amount for the project first.");
+                    } else {
+                        projectEntity.setStatus(ProjectStatus.STARTED);
+                    }
+
+            }
+        }
+
+/*        if (newStatus == ProjectStatus.CLOSED) {
             if (projectEntity.getReleases().stream().anyMatch(release -> release.getStatus() != ReleaseStatus.CLOSED)) {
                 throw new BoardAppIncorrectStateException("Can't close the project containing a release in a not CLOSED state.");
             }
             projectEntity.setStatus(newStatus);
-        }
+        }*/
 
         String newName = projectUpdateDto.getName();
         if (newName != null) {

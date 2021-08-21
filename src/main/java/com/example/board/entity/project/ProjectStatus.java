@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public enum ProjectStatus {
     OPEN,
+    STARTED,
     CLOSED;
 
     @JsonCreator

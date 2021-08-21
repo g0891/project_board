@@ -27,6 +27,8 @@ public class ProjectEntity {
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
+    private Long cost;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private PersonEntity customer;
@@ -38,10 +40,11 @@ public class ProjectEntity {
     public ProjectEntity() {
     }
 
-    public ProjectEntity(String name, String description, ProjectStatus status, PersonEntity customer) {
+    public ProjectEntity(String name, String description, ProjectStatus status, Long cost, PersonEntity customer) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.cost = cost;
         this.customer = customer;
     }
 
@@ -75,6 +78,14 @@ public class ProjectEntity {
 
     public void setStatus(ProjectStatus status) {
         this.status = status;
+    }
+
+    public Long getCost() {
+        return cost;
+    }
+
+    public void setCost(Long cost) {
+        this.cost = cost;
     }
 
     public PersonEntity getCustomer() {

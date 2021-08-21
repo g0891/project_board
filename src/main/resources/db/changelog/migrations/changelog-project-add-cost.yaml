@@ -1,0 +1,12 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 000000-table-project-add-cost
+      author: g0891
+      changes:
+        - addColumn:
+            tableName: project
+            columns:
+              - column:
+                  name: cost
+                  type: bigint
