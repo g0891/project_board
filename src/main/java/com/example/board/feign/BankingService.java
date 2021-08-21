@@ -15,22 +15,22 @@ import java.util.List;
 @FeignClient(
         name = "banking",
         url = "${bankingService.url}",
-        path = "${bankingService.api.path}/bankAccount",
+        path = "${bankingService.api.path}",
         configuration = BankingServiceConfiguration.class
 )
 public interface BankingService {
-    @GetMapping("/{personId}/balance")
+    @GetMapping("/bankAccount/{personId}/balance")
     ResponseEntity<Long> getPersonBalance(@PathVariable long personId);
 
-    @PutMapping("/{personId}/addMoney")
+    @PutMapping("/bankAccount/{personId}/addMoney")
     ResponseEntity addMoney(@PathVariable long personId, @RequestBody TransactionDto transactionDto);
 
-    @PutMapping("/{personId}/pay")
+    @PutMapping("/bankAccount/{personId}/pay")
     ResponseEntity payForProject(@PathVariable long personId, @RequestBody TransactionDto transactionDto);
 
-    @GetMapping("/{personId}/history")
+    @GetMapping("/bankAccount/{personId}/history")
     ResponseEntity<List<TransactionDto>> getTransactionsForPerson(@PathVariable long personId);
 
-    @GetMapping("/projectPayments/{projectId}")
+    @GetMapping("/bankAccount/projectPayments/{projectId}")
     ResponseEntity<Long> getTotalPaymentsForProject(@PathVariable long projectId);
 }
