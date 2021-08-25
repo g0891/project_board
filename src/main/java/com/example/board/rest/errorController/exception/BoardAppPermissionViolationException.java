@@ -1,3 +1,4 @@
+/*
 package com.example.board.rest.errorController.exception;
 
 public class BoardAppPermissionViolationException extends RuntimeException {
@@ -5,3 +6,4 @@ public class BoardAppPermissionViolationException extends RuntimeException {
         super(msg);
     }
 }
+*/

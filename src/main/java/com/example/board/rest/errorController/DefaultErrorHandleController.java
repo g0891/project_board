@@ -1,5 +1,6 @@
 package com.example.board.rest.errorController;
 
+import com.example.board.config.locale.LocaleTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -17,9 +18,13 @@ public class DefaultErrorHandleController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.warn(e.getMessage());
+
+        log.warn(LocaleTranslator.translateForLogs("CommonException.error", e.getMessage()));
         log.debug("Details:", e.getCause());
         e.printStackTrace();
-        return new ResponseEntity<>(new ErrorResponse(String.format("Something unexpected happened: %s", e.getMessage())), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                new ErrorResponse(LocaleTranslator.translate("CommonException.error", e.getMessage())),
+                HttpStatus.BAD_REQUEST
+        );
     }
 }

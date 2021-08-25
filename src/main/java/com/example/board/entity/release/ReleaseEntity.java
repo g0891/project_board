@@ -39,6 +39,53 @@ public class ReleaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "release")
     private List<TaskEntity> tasks;
 
+    public static class Builder{
+        private Long id;
+        private String version;
+        private ReleaseStatus status;
+        private LocalDateTime createdOn;
+        private LocalDateTime releasedOn;
+        private ProjectEntity project;
+        private List<TaskEntity> tasks;
+
+        public Builder addId(Long id) {
+            this.id = id;
+            return this;
+        }
+        public Builder addVersion(String version) {
+            this.version = version;
+            return this;
+        }
+        public Builder addStatus(ReleaseStatus status) {
+            this.status = status;
+            return this;
+        }
+        public Builder addCreatedOn(LocalDateTime createdOn) {
+            this.createdOn = createdOn;
+            return this;
+        }
+
+        public Builder addReleasedOn(LocalDateTime releasedOn) {
+            this.releasedOn = releasedOn;
+            return this;
+        }
+
+        public Builder addProject(ProjectEntity project) {
+            this.project = project;
+            return this;
+        }
+        public Builder addTasks(List<TaskEntity> tasks) {
+            this.tasks = tasks;
+            return this;
+        }
+        public ReleaseEntity build(){
+            ReleaseEntity releaseEntity = new ReleaseEntity(version,status,createdOn,releasedOn,project);
+            releaseEntity.setId(id);
+            releaseEntity.setTasks(tasks);
+            return releaseEntity;
+        }
+    }
+
     public ReleaseEntity() {
     }
 

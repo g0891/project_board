@@ -22,6 +22,53 @@ public class TaskSearchDto {
     @Schema(description = "Идентификатор проекта (опционально)")
     private Long projectId;
 
+    public static class Builder{
+        private Long id;
+        private String name;
+        private String description;
+        private TaskStatus status;
+        private Long authorId;
+        private Long executorId;
+        private Long releaseId;
+        private Long projectId;
+
+        public Builder addId(Long id){
+            this.id = id;
+            return this;
+        }
+        public Builder addName(String name){
+            this.name = name;
+            return this;
+        }
+        public Builder addDescription(String description){
+            this.description = description;
+            return this;
+        }
+        public Builder addStatus(TaskStatus status){
+            this.status = status;
+            return this;
+        }
+        public Builder addAuthorId(Long authorId){
+            this.authorId = authorId;
+            return this;
+        }
+        public Builder addExecutorId(Long executorId){
+            this.executorId = executorId;
+            return this;
+        }
+        public Builder addReleaseId(Long releaseId){
+            this.releaseId = releaseId;
+            return this;
+        }
+        public Builder addProjectId(Long projectId){
+            this.projectId = projectId;
+            return this;
+        }
+        public TaskSearchDto build() {
+            return new TaskSearchDto(id,name,description,status,authorId,executorId,releaseId,projectId);
+        }
+    }
+
     public TaskSearchDto() {
     }
 

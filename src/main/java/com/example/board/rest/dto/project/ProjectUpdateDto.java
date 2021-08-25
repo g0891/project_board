@@ -16,6 +16,38 @@ public class ProjectUpdateDto {
     @Schema(description = "Стоимость проекта")
     private Long cost;
 
+    public static class Builder{
+        private String name;
+        private String description;
+        private Long customerId;
+        private ProjectStatus status;
+        private Long cost;
+
+        public Builder addName(String name){
+            this.name = name;
+            return this;
+        }
+        public Builder addDescription(String description){
+            this.description = description;
+            return this;
+        }
+        public Builder addCustomerId(Long customerId){
+            this.customerId = customerId;
+            return this;
+        }
+        public Builder addStatus(ProjectStatus status){
+            this.status = status;
+            return this;
+        }
+        public Builder addCost(Long cost){
+            this.cost = cost;
+            return this;
+        }
+
+        public ProjectUpdateDto build(){
+            return new ProjectUpdateDto(name,description,customerId,status,cost);
+        }
+    }
 
     public ProjectUpdateDto() {
     }

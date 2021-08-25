@@ -60,6 +60,18 @@ public class PersonEntity {
         this.roles = roles;
     }
 
+
+    public PersonEntity(Long id, String name, String password, PersonStatus status, Set<RoleEntity> roles, Set<ProjectEntity> projectsWhereCustomer, Set<TaskEntity> tasksWhereAuthor, Set<TaskEntity> tasksWhereExecutor) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.status = status;
+        this.roles = roles;
+        this.projectsWhereCustomer = projectsWhereCustomer;
+        this.tasksWhereAuthor = tasksWhereAuthor;
+        this.tasksWhereExecutor = tasksWhereExecutor;
+    }
+
     public Long getId() {
         return id;
     }

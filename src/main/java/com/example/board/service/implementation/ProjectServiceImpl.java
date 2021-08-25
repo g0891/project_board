@@ -13,6 +13,7 @@ import com.example.board.repository.ProjectRepository;
 import com.example.board.rest.dto.project.ProjectCreateDto;
 import com.example.board.rest.dto.project.ProjectReadDto;
 import com.example.board.rest.dto.project.ProjectUpdateDto;
+import com.example.board.rest.errorController.exception.BoardAppIllegalArgumentException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
@@ -45,7 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectReadDto getById(long id) throws BoardAppIncorrectIdException {
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no project with id = %d", id)));
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noProjectFound", id));
         return projectMapper.projectEntityToProjectReadDto(projectEntity);
     }
 
@@ -60,7 +61,8 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectEntity projectEntity = projectMapper.projectCreateDtoToProjectEntity(project);
 
         if (!personMapper.roleEntitySetToPersonRoleSet(projectEntity.getCustomer().getRoles()).contains(PersonRole.CUSTOMER)) {
-            throw new BoardAppIncorrectRoleException("Only person with CUSTOMER role can be a customer of the project.");
+            throw new BoardAppIncorrectRoleException("BoardAppIncorrectRoleException.customerRoleRequired");
+            //throw new BoardAppIncorrectRoleException("Only person with CUSTOMER role can be a customer of the project.");
         }
 
         projectEntity = projectRepository.save(projectEntity);
@@ -112,20 +114,20 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void update(long id, ProjectUpdateDto projectUpdateDto) {
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no project with id = %d", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noProjectFound", id)
         );
 
         if (projectEntity.getStatus() == ProjectStatus.CLOSED) {
-            throw new BoardAppIncorrectStateException("Can't change an already CLOSED project.");
+            throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.projectClosed");
         }
 
         Long newCost = projectUpdateDto.getCost();
         if (newCost != null) {
             if(projectEntity.getStatus() != ProjectStatus.OPEN) {
-                throw new BoardAppIncorrectStateException("Can't change cost of a project in a non OPEN state.");
+                throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.projectNotOpened");
             }
             if (newCost < 0) {
-                throw new IllegalArgumentException("The cost could not be less than 0.");
+                throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.nonPositiveCoast");
             }
 
             projectEntity.setCost(newCost);
@@ -138,20 +140,20 @@ public class ProjectServiceImpl implements ProjectService {
             switch (newStatus) {
                 case CLOSED:
                     if (projectEntity.getReleases().stream().anyMatch(release -> release.getStatus() != ReleaseStatus.CLOSED)) {
-                        throw new BoardAppIncorrectStateException("Can't close the project containing a release in a not CLOSED state.");
+                        throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.notClosedReleases");
                     }
                     projectEntity.setStatus(newStatus);
                     break;
                 case OPEN:
-                    throw new BoardAppIncorrectStateException("Can't change project status back to OPEN.");
+                    throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.backToOpen");
                     //break;
                 case STARTED:
                     if (projectEntity.getCost() == null) {
-                        throw new BoardAppIncorrectStateException("Project cost should be defined first.");
+                        throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.costNotDefined");
                     }
                     ResponseEntity<Long> response = bankingService.getTotalPaymentsForProject(projectEntity.getId());
                     if (response == null || response.getBody() == null || response.getBody() < projectEntity.getCost()) {
-                        throw new BoardAppIncorrectStateException("Customer should pay a proper amount for the project first.");
+                        throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.payFirst");
                     } else {
                         projectEntity.setStatus(ProjectStatus.STARTED);
                     }
@@ -169,7 +171,7 @@ public class ProjectServiceImpl implements ProjectService {
         String newName = projectUpdateDto.getName();
         if (newName != null) {
             if (newName.isEmpty()) {
-                throw new IllegalArgumentException("Project name can't be an empty string");
+                throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.projectNameIsEmpty");
             }
             projectEntity.setName(newName);
         }
@@ -177,7 +179,7 @@ public class ProjectServiceImpl implements ProjectService {
         String newDescription = projectUpdateDto.getDescription();
         if (newDescription != null) {
             if (newDescription.isEmpty()) {
-                throw new IllegalArgumentException("Project description can't be an empty string");
+                throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.projectDescriptionIsEmpty");
             }
             projectEntity.setDescription(newDescription);
         }
@@ -185,11 +187,11 @@ public class ProjectServiceImpl implements ProjectService {
         Long newCustomerId = projectUpdateDto.getCustomerId();
         if (newCustomerId != null) {
             PersonEntity personEntity = personRepository.findById(newCustomerId).orElseThrow(
-                    () -> new BoardAppIncorrectIdException(String.format("There is no customer with id = %d", newCustomerId))
+                    () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noPersonFound", newCustomerId)
             );
 
             if (!personMapper.roleEntitySetToPersonRoleSet(personEntity.getRoles()).contains(PersonRole.CUSTOMER)) {
-                throw new BoardAppIncorrectRoleException("A person can't be set as a customer for a project because the CUSTOMER role is missing.");
+                throw new BoardAppIncorrectRoleException("BoardAppIncorrectRoleException.customerRoleRequired");
             }
 
             projectEntity.setCustomer(personEntity);
@@ -201,11 +203,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void delete(long id) throws BoardAppIncorrectIdException {
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no project with id = %d", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noProjectFound", id)
         );
 
         if (!projectEntity.getReleases().isEmpty()) {
-            throw new BoardAppIncorrectStateException("Can't delete project with releases inside.");
+            throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.deleteWithReleases");
         }
 
         projectRepository.deleteById(id);

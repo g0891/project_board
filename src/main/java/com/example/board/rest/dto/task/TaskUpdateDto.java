@@ -12,16 +12,54 @@ public class TaskUpdateDto {
     @Schema(description = "Статус задачи")
     private TaskStatus status;
     @Schema(description = "Автор")
-    private long authorId;
+    private Long authorId;
     @Schema(description = "Исполнитель")
     private Long executorId;
     @Schema(description = "Идентификатор релиза")
-    private long releaseId;
+    private Long releaseId;
+
+    public static class Builder{
+        private String name;
+        private String description;
+        private TaskStatus status;
+        private Long authorId;
+        private Long executorId;
+        private Long releaseId;
+
+        public Builder addName(String name){
+            this.name = name;
+            return this;
+        }
+        public Builder addDescription(String description){
+            this.description = description;
+            return this;
+        }
+        public Builder addStatus(TaskStatus status){
+            this.status = status;
+            return this;
+        }
+        public Builder addAuthorId(Long authorId){
+            this.authorId = authorId;
+            return this;
+        }
+        public Builder addExecutorId(Long executorId){
+            this.executorId = executorId;
+            return this;
+        }
+        public Builder addReleaseId(Long releaseId){
+            this.releaseId = releaseId;
+            return this;
+        }
+
+        public TaskUpdateDto build(){
+            return new TaskUpdateDto(name,description,status,authorId,executorId,releaseId);
+        }
+    }
 
     public TaskUpdateDto() {
     }
 
-    public TaskUpdateDto(String name, String description, TaskStatus status, int authorId, Long executorId, int releaseId) {
+    public TaskUpdateDto(String name, String description, TaskStatus status, Long authorId, Long executorId, Long releaseId) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -66,7 +104,7 @@ public class TaskUpdateDto {
         return executorId;
     }
 
-    public void setExecutorId(Long executorId) {
+    public void setExecutorId(long executorId) {
         this.executorId = executorId;
     }
 
