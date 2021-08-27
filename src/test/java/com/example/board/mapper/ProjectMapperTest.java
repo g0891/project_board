@@ -25,13 +25,13 @@ import static org.mockito.Mockito.when;
 class ProjectMapperTest {
 
     @Mock
-    PersonRepository personRepository;
+    private PersonRepository personRepository;
     @InjectMocks
-    ProjectMapperImpl projectMapper;
+    private ProjectMapperImpl projectMapper;
 
-    long notExistingPersonId = 0L;
-    PersonEntity person1 = new PersonEntity(); {person1.setId(1L);}
-    PersonEntity person2 = new PersonEntity(); {person2.setId(2L);}
+    private long notExistingPersonId = 0L;
+    private PersonEntity person1 = new PersonEntity(); {person1.setId(1L);}
+    private PersonEntity person2 = new PersonEntity(); {person2.setId(2L);}
 
     @Test
     void projectCreateDtoToProjectEntity() {

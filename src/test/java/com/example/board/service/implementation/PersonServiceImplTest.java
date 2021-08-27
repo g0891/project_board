@@ -113,7 +113,8 @@ class PersonServiceImplTest {
         when(personRepository.save(any())).thenReturn(personEntity1);
 
         //Then
-        assertEquals(1L, personService.register(validPersonRegisterDto));
+        Long registeredPersonId = personService.register(validPersonRegisterDto);
+        assertEquals(1L, registeredPersonId);
         verify(personRepository).save(personEntityArgumentCaptor.capture());
         assertEquals(validPersonRegisterDto.getName(), personEntityArgumentCaptor.getValue().getName());
         assertEquals(encodedPassword, personEntityArgumentCaptor.getValue().getPassword());

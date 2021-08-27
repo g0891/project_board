@@ -26,13 +26,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@EnabledIf(expression = "#{environment['spring.profiles.active'] == 'integration'}", loadContext = true)
 @SpringBootTest()
 @AutoConfigureMockMvc
-class BoardApplicationTests {
+class SomeIntegrationTests {
 
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
 	private ObjectMapper objectMapper;
-	Logger logger = LoggerFactory.getLogger(BoardApplicationTests.class);
+	Logger logger = LoggerFactory.getLogger(SomeIntegrationTests.class);
 	@Value("${spring.datasource.url}")
 	String db;
 	@Value("${api.path}")
