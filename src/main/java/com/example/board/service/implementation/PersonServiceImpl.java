@@ -10,6 +10,7 @@ import com.example.board.rest.dto.person.PersonReadDto;
 import com.example.board.rest.dto.person.PersonRegisterDto;
 import com.example.board.rest.dto.person.PersonUpdateDto;
 import com.example.board.rest.errorController.exception.BoardAppConsistencyViolationException;
+import com.example.board.rest.errorController.exception.BoardAppIllegalArgumentException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.service.PersonService;
@@ -43,7 +44,8 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonReadDto getById(long id) throws BoardAppIncorrectIdException {
         PersonEntity personEntity = personRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noPersonFound", id)
+                //() -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
         );
         return personMapper.personEntityToPersonReadDto(personEntity);
     }
@@ -64,13 +66,16 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public long register(PersonRegisterDto personRegisterDto) {
-        if (
-                personRegisterDto == null ||
-                StringUtils.isBlank(personRegisterDto.getName()) ||
-                StringUtils.isBlank(personRegisterDto.getPassword())
-        ) {
-            throw new IllegalArgumentException("Both username and password should not be empty");
+        if (personRegisterDto == null){
+            throw new BoardAppIllegalArgumentException("IllegalArgumentException.dtoIsEmpty");
         }
+        if (StringUtils.isBlank(personRegisterDto.getName())) {
+            throw new BoardAppIllegalArgumentException("IllegalArgumentException.passwordIsEmpty");
+        }
+        if (StringUtils.isBlank(personRegisterDto.getPassword())) {
+            throw new BoardAppIllegalArgumentException("IllegalArgumentException.personNameIsEmpty");
+        }
+
         PersonEntity personEntity = new PersonEntity(
                 personRegisterDto.getName(),
                 passwordEncoder.encode(personRegisterDto.getPassword()),
@@ -104,18 +109,19 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void update(long id, PersonUpdateDto personUpdateDto) {
         PersonEntity personEntity = personRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noPersonFound", id)
+                //() -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
         );
 
         String newName = personUpdateDto.getName();
         if (newName != null){
             if (newName.isEmpty()) {
-                throw new IllegalArgumentException("Person name can't be null or empty string");
+                throw new BoardAppIllegalArgumentException("IllegalArgumentException.personNameIsEmpty");
             }
 
             Optional<PersonEntity> sameNamePerson = personRepository.findByName(newName);
             if (sameNamePerson.isPresent() && !sameNamePerson.get().getId().equals(personEntity.getId())) {
-                throw new IllegalArgumentException("Person name is already used for another user");
+                throw new BoardAppIllegalArgumentException("IllegalArgumentException.personNameAlreadyUsed");
             }
 
             personEntity.setName(newName);
@@ -129,7 +135,7 @@ public class PersonServiceImpl implements PersonService {
             Set<RoleEntity> roleEntities = new HashSet<>();
             personUpdateDto.getRoles().stream().forEach(role -> roleEntities.add(
                     roleRepository.findByNameIgnoreCase(role.name()).orElseThrow(
-                            () -> new BoardAppIncorrectRoleException("Incorrect role name: " + role.name())
+                            () -> new BoardAppIncorrectRoleException("BoardAppIncorrectRoleException.roleNameIsIncorrect", role.name())
                     )));
             personEntity.setRoles(roleEntities);
         }
@@ -141,16 +147,17 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void delete(long id) throws BoardAppIncorrectIdException, BoardAppConsistencyViolationException {
         PersonEntity personEntity = personRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noPersonFound", id)
+                //() -> new BoardAppIncorrectIdException(String.format("Person with Id = %d  not found.", id))
         );
         if (!personEntity.getProjectsWhereCustomer().isEmpty()) {
-            throw new BoardAppConsistencyViolationException("A person can't be deleted because of participating in projects as CUSTOMER");
+            throw new BoardAppConsistencyViolationException("BoardAppConsistencyViolationException.personUsedAsCustomer", id);
         }
         if (!personEntity.getTasksWhereAuthor().isEmpty()) {
-            throw new BoardAppConsistencyViolationException("A person can't be deleted because of being an AUTHOR of some tasks.");
+            throw new BoardAppConsistencyViolationException("BoardAppConsistencyViolationException.personUsedAsAuthor", id);
         }
         if (!personEntity.getTasksWhereExecutor().isEmpty()) {
-            throw new BoardAppConsistencyViolationException("A person can't be deleted because of being an EXECUTOR in some tasks.");
+            throw new BoardAppConsistencyViolationException("BoardAppConsistencyViolationException.personUsedAsExecutor", id);
         }
 
         personRepository.deleteById(id);

@@ -10,9 +10,11 @@ import com.example.board.repository.ReleaseRepository;
 import com.example.board.rest.dto.release.ReleaseCreateDto;
 import com.example.board.rest.dto.release.ReleaseReadDto;
 import com.example.board.rest.dto.release.ReleaseUpdateDto;
+import com.example.board.rest.errorController.exception.BoardAppIllegalArgumentException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
 import com.example.board.service.ReleaseService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,9 +38,9 @@ public class ReleaseServiceImpl implements ReleaseService {
 
 
     @Override
-    public ReleaseReadDto getById(long id) throws BoardAppIncorrectIdException {
+    public ReleaseReadDto getById(long id) {
         ReleaseEntity releaseEntity = releaseRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no release with id = %d", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noReleaseFound", id)
         );
         return releaseMapper.releaseEntityToReleaseReadDto(releaseEntity);
     }
@@ -50,11 +52,15 @@ public class ReleaseServiceImpl implements ReleaseService {
     }
 
     @Override
-    public long add(ReleaseCreateDto release) throws BoardAppIncorrectIdException {
+    public long add(ReleaseCreateDto release) {
         ReleaseEntity releaseEntity = releaseMapper.releaseCreateDtoToReleaseEntity(release);
 
         if (releaseEntity.getProject().getStatus() != ProjectStatus.STARTED) {
-            throw new BoardAppIncorrectStateException("The project should be STARTED to add releases.");
+            throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.projectNotStarted");
+        }
+
+        if (StringUtils.isBlank(releaseEntity.getVersion())) {
+            throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.releaseVersionIsEmpty");
         }
 
         releaseEntity = releaseRepository.save(releaseEntity);
@@ -90,11 +96,11 @@ public class ReleaseServiceImpl implements ReleaseService {
     @Override
     public void update(long id, ReleaseUpdateDto releaseUpdateDto) {
         ReleaseEntity releaseEntity = releaseRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no release with id = %d", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noReleaseFound", id)
         );
 
         if (releaseEntity.getStatus() == ReleaseStatus.CLOSED) {
-            throw new BoardAppIncorrectStateException("Can't change an already CLOSED release");
+            throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.releaseClosed");
         }
 
         ReleaseStatus newReleaseStatus = releaseUpdateDto.getStatus();
@@ -110,8 +116,8 @@ public class ReleaseServiceImpl implements ReleaseService {
 
         String newVersion = releaseUpdateDto.getVersion();
         if (newVersion != null) {
-            if (newVersion.isEmpty()) {
-                throw new IllegalArgumentException("Release version can't be an empty string");
+            if (StringUtils.isBlank(newVersion)) {
+                throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.releaseVersionIsEmpty");
             }
             releaseEntity.setVersion(newVersion);
         }
@@ -120,22 +126,26 @@ public class ReleaseServiceImpl implements ReleaseService {
     }
 
     @Override
-    public void delete(long id) throws BoardAppIncorrectIdException {
-        if (releaseRepository.existsById(id)) {
-            releaseRepository.deleteById(id);
-        } else {
-            throw new BoardAppIncorrectIdException(String.format("There is no release with id = %d", id));
+    public void delete(long id) {
+        ReleaseEntity release = releaseRepository.findById(id).orElseThrow(
+                () ->new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noReleaseFound", id)
+        );
+
+        if (!release.getTasks().isEmpty()) {
+            throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.deleteWithTasks");
         }
+
+        releaseRepository.deleteById(id);
     }
 
     @Override
     public long countCancelledForClosedRelease(long id) {
         ReleaseEntity releaseEntity = releaseRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no release with id = %d", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noReleaseFound", id)
         );
 
         if (releaseEntity.getStatus() != ReleaseStatus.CLOSED) {
-            throw new BoardAppIncorrectStateException("Can't count undone tasks cause release in to CLOSED yet.");
+            throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.releaseNotClosed");
         }
 
         return releaseEntity.getTasks().stream().filter(task -> task.getStatus() == TaskStatus.CANCELED).count();

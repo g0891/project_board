@@ -43,6 +43,74 @@ public class TaskEntity {
     @JoinColumn(name = "release_id")
     private ReleaseEntity release;
 
+    public static class Builder{
+        private Long id;
+        private String name;
+        private String description;
+        private TaskStatus status;
+        private LocalDateTime createdOn;
+        private LocalDateTime doneOn;
+        private PersonEntity author;
+        private PersonEntity executor;
+        private ReleaseEntity release;
+
+        public Builder addId(Long id) {
+            this.id = id;
+            return this;
+        }
+        public Builder addName(String name) {
+            this.name = name;
+            return this;
+        }
+        public Builder addDescription(String description) {
+            this.description = description;
+            return this;
+        }
+        public Builder addStatus(TaskStatus status) {
+            this.status = status;
+            return this;
+        }
+        public Builder addCreatedOn(LocalDateTime createdOn) {
+            this.createdOn = createdOn;
+            return this;
+        }
+        public Builder addDoneOn(LocalDateTime doneOn) {
+            this.doneOn = doneOn;
+            return this;
+        }
+        public Builder addAuthor(PersonEntity author) {
+            this.author = author;
+            return this;
+        }
+        public Builder addExecutor(PersonEntity executor) {
+            this.executor = executor;
+            return this;
+        }
+        public Builder addRelease(ReleaseEntity release) {
+            this.release = release;
+            return this;
+        }
+
+        public TaskEntity build(){
+            return new TaskEntity(id,name,description,status,createdOn,doneOn,author,executor,release);
+        }
+    }
+
+    public TaskEntity() {
+    }
+
+    public TaskEntity(Long id, String name, String description, TaskStatus status, LocalDateTime createdOn, LocalDateTime doneOn, PersonEntity author, PersonEntity executor, ReleaseEntity release) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.createdOn = createdOn;
+        this.doneOn = doneOn;
+        this.author = author;
+        this.executor = executor;
+        this.release = release;
+    }
+
     public Long getId() {
         return id;
     }

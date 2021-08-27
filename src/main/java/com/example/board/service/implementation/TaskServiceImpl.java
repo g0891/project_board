@@ -13,6 +13,7 @@ import com.example.board.rest.dto.task.TaskCreateDto;
 import com.example.board.rest.dto.task.TaskReadDto;
 import com.example.board.rest.dto.task.TaskSearchDto;
 import com.example.board.rest.dto.task.TaskUpdateDto;
+import com.example.board.rest.errorController.exception.BoardAppIllegalArgumentException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
 import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
@@ -33,7 +34,6 @@ import java.io.Reader;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -59,7 +59,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskReadDto getById(long id) throws BoardAppIncorrectIdException {
         TaskEntity taskEntity = taskRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no task with id = %d", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noTaskFound", id)
         );
         return taskMapper.taskEntityToTaskReadDto(taskEntity);
     }
@@ -89,15 +89,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public long add(TaskCreateDto task) throws BoardAppIncorrectIdException {
+    public long add(TaskCreateDto task) {
         TaskEntity taskEntity = taskMapper.taskCreateDtoToTaskEntity(task);
 
         if (taskEntity.getRelease().getStatus() != ReleaseStatus.OPEN) {
-            throw new BoardAppIncorrectStateException("A release should be in OPEN state to add a task. Task not added.");
+            throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.releaseNotOpen");
         }
 
         if (!personMapper.roleEntitySetToPersonRoleSet(taskEntity.getAuthor().getRoles()).contains(PersonRole.AUTHOR)) {
-            throw new BoardAppIncorrectRoleException("Only person with AUTHOR role can be an author of the task.");
+            throw new BoardAppIncorrectRoleException("BoardAppIncorrectRoleException.authorRoleRequired");
         }
 
         taskEntity = taskRepository.save(taskEntity);
@@ -122,35 +122,35 @@ public class TaskServiceImpl implements TaskService {
 
                 String name = record.get("name");
                 if (name == null || name.isEmpty()) {
-                    throw new IllegalArgumentException("Task name can't be an empty string");
+                    throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.taskNameIsEmpty");
                 }
 
                 String description = record.get("description");
                 if (description == null || description.isEmpty()) {
-                    throw new IllegalArgumentException("Task description can't be an empty string");
+                    throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.taskDescriptionIsEmpty");
                 }
 
                 long authorId;
                 String authorIdString = record.get("authorId");
                 if (authorIdString == null || authorIdString.isEmpty()) {
-                    throw new IllegalArgumentException("Task should have an author defined");
+                    throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.taskAuthorIsEmpty");
                 } else {
                     try {
                         authorId = Long.parseLong(authorIdString);
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Author id should have a valid number format.");
+                        throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.taskAuthorInvalidFormat");
                     }
                 }
 
                 long releaseId;
                 String releaseIdString = record.get("releaseId");
                 if (releaseIdString == null || releaseIdString.isEmpty()) {
-                    throw new IllegalArgumentException("Task should have a release defined");
+                    throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.taskReleaseIsEmpty");
                 } else {
                     try {
                         releaseId = Long.parseLong(releaseIdString);
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Release id should have a valid number format.");
+                        throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.taskReleaseInvalidFormat");
                     }
                 }
 
@@ -162,18 +162,18 @@ public class TaskServiceImpl implements TaskService {
                     try {
                         executorId = Long.parseLong(executorIdString);
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Executor id should have a valid number format.");
+                        throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.taskExecutorInvalidFormat");
                     }
                 }
 
                 return this.add(new TaskCreateDto(name, description, authorId, executorId, releaseId));
             } else {
-                throw new IllegalArgumentException("There are no records in CSV file");
+                throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.CsvNoRecords");
             }
         } catch (FileNotFoundException ex) {
-            throw new BoardAppStorageException("Uploaded file can't be founded.");
+            throw new BoardAppStorageException("BoardAppStorageException.fileNotFound");
         } catch (IOException ex) {
-            throw new BoardAppStorageException("Uploaded file can't be read.");
+            throw new BoardAppStorageException("BoardAppStorageException.fileUnreadable");
         }
     }
 
@@ -242,17 +242,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void update(long id, TaskUpdateDto taskUpdateDto) {
         TaskEntity taskEntity = taskRepository.findById(id).orElseThrow(
-                () -> new BoardAppIncorrectIdException(String.format("There is no task with id = %d", id))
+                () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noTaskFound", id)
         );
 
         if (taskEntity.getStatus() == TaskStatus.DONE || taskEntity.getStatus() == TaskStatus.CANCELED) {
-            throw new BoardAppIncorrectStateException("Task in DONE or CANCELED state  can't be modified");
+            throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.taskIsClosed");
         }
 
         String newName = taskUpdateDto.getName();
         if (newName != null) {
             if (newName.isEmpty()) {
-                throw new IllegalArgumentException("Task name can't be an empty string");
+                throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.taskNameIsEmpty");
             }
             taskEntity.setName(newName);
         }
@@ -260,32 +260,32 @@ public class TaskServiceImpl implements TaskService {
         String newDescription = taskUpdateDto.getDescription();
         if (newDescription != null) {
             if (newDescription.isEmpty()) {
-                throw new IllegalArgumentException("Task description can't be an empty string");
+                throw new BoardAppIllegalArgumentException("BoardAppIllegalArgumentException.taskDescriptionIsEmpty");
             }
             taskEntity.setName(newDescription);
         }
 
         TaskStatus newTaskStatus = taskUpdateDto.getStatus();
-        if (newTaskStatus != null) {
-            TaskStatus currentStatus = taskEntity.getStatus();
+        TaskStatus currentStatus = taskEntity.getStatus();
+        if (newTaskStatus != null && newTaskStatus != currentStatus) {
             if (currentStatus == TaskStatus.BACKLOG
-                    && Set.of(TaskStatus.IN_PROGRESS, TaskStatus.CANCELED).contains(newTaskStatus)
+                    && !Set.of(TaskStatus.IN_PROGRESS, TaskStatus.CANCELED).contains(newTaskStatus)
  /*                   && newTaskStatus != TaskStatus.IN_PROGRESS
                     && newTaskStatus != TaskStatus.CANCELED*/) {
-                throw new BoardAppIncorrectStateException("Task in BACKLOG status can be moved to IN_PROGRESS or CANCELED status only.");
+                throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.taskBacklogToIncorrectState");
             }
 
             if (currentStatus == TaskStatus.IN_PROGRESS
-                    && Set.of(TaskStatus.CANCELED, TaskStatus.DONE).contains(newTaskStatus)
+                    && !Set.of(TaskStatus.CANCELED, TaskStatus.DONE).contains(newTaskStatus)
                    /* && newTaskStatus != TaskStatus.DONE
                     && newTaskStatus != TaskStatus.CANCELED*/) {
-                throw new BoardAppIncorrectStateException("Task in IN_PROGRESS status can be moved to DONE or CANCELED status only.");
+                throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.taskInProgressToIncorrectState");
             }
 
             if (currentStatus == TaskStatus.BACKLOG
                     && newTaskStatus == TaskStatus.IN_PROGRESS
-                    && taskUpdateDto.getExecutorId() == null) {
-                throw new BoardAppIncorrectStateException("Task can't be moved to IN_PROGRESS without defining an executor");
+                    && (taskUpdateDto.getExecutorId() == null && taskEntity.getExecutor() == null)) {
+                throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.executorIsMissing");
             }
 
             if (Set.of(TaskStatus.CANCELED, TaskStatus.DONE).contains(newTaskStatus)
@@ -299,14 +299,14 @@ public class TaskServiceImpl implements TaskService {
         Long newExecutorId = taskUpdateDto.getExecutorId();
         if (newExecutorId != null) {
             if (taskEntity.getStatus() != TaskStatus.IN_PROGRESS && taskEntity.getStatus() != TaskStatus.BACKLOG) {
-                throw new BoardAppIncorrectStateException("Can't set an executor for task in a status other than IN_PROGRESS or BACKLOG.");
+                throw new BoardAppIncorrectStateException("BoardAppIncorrectStateException.executorForUnsuitableState");
             }
             PersonEntity executor = personRepository.findById(newExecutorId).orElseThrow(
-                    () -> new BoardAppIncorrectIdException(String.format("There is no person with id = %d", newExecutorId))
+                    () -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noPersonFound", newExecutorId)
             );
 
             if (!personMapper.roleEntitySetToPersonRoleSet(executor.getRoles()).contains(PersonRole.EXECUTOR)) {
-                throw new BoardAppIncorrectRoleException("A person can't be set as an executor for a task because the EXECUTOR role is missing.");
+                throw new BoardAppIncorrectRoleException("BoardAppIncorrectRoleException.executorRoleRequired");
             }
 
             taskEntity.setExecutor(executor);
@@ -317,14 +317,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void delete(long id) throws BoardAppIncorrectIdException {
-        Optional<TaskEntity> task = taskRepository.findById(id);
+    public void delete(long id) {
+        TaskEntity task = taskRepository.findById(id)
+                .orElseThrow(() -> new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noTaskFound", id));
+        /*Optional<TaskEntity> task = taskRepository.findById(id);
         if (task.isEmpty()) {
-            throw new BoardAppIncorrectIdException(String.format("There is no task with id = %d", id));
-        }
+            throw new BoardAppIncorrectIdException("BoardAppIncorrectIdException.noTaskFound", id);
+        }*/
 
-        if (task.get().getStatus() != TaskStatus.BACKLOG) {
-            throw new BoardAppIncorrectStateException("Only task in BACKLOG status can be deleted. Otherwise please complete or cancel task instead.");
+        if (task.getStatus() != TaskStatus.BACKLOG) {
+            throw new BoardAppIncorrectStateException("BoardAppIncorrectIdException.taskDeletion");
         }
 
         taskRepository.deleteById(id);

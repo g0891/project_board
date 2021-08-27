@@ -36,6 +36,52 @@ public class ProjectEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
     private List<ReleaseEntity> releases;
 
+    public static class Builder{
+        private Long id;
+        private String name;
+        private String description;
+        private ProjectStatus status;
+        private Long cost;
+        private PersonEntity customer;
+        private List<ReleaseEntity> releases;
+
+        public Builder addId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder addName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder addDescription(String description) {
+            this.description = description;
+            return this;
+        }
+        public Builder addStatus(ProjectStatus status) {
+            this.status = status;
+            return this;
+        }
+        public Builder addCost(Long cost) {
+            this.cost = cost;
+            return this;
+        }
+        public Builder addCustomer(PersonEntity customer) {
+            this.customer = customer;
+            return this;
+        }
+        public Builder addReleases(List<ReleaseEntity> releases) {
+            this.releases = releases;
+            return this;
+        }
+        public ProjectEntity build() {
+            ProjectEntity newEntity = new ProjectEntity(name,description,status,cost,customer);
+            newEntity.setId(id);
+            newEntity.setReleases(releases);
+            return newEntity;
+        }
+    }
 
     public ProjectEntity() {
     }

@@ -11,14 +11,14 @@ public class ProjectCreateDto {
     @Schema(description = "Идентификатор клиента")
     private long customerId;
 
-/*    public ProjectCreateDto() {
+    public ProjectCreateDto() {
     }
 
     public ProjectCreateDto(String name, String description, long customerId) {
         this.name = name;
         this.description = description;
         this.customerId = customerId;
-    }*/
+    }
 
     public String getName() {
         return name;

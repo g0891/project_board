@@ -1,15 +1,9 @@
 package com.example.board.rest.errorController;
 
-import com.example.board.rest.errorController.exception.BoardAppConsistencyViolationException;
-import com.example.board.rest.errorController.exception.BoardAppExternalMicroserviceException;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectEnumException;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectIdException;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectRoleException;
-import com.example.board.rest.errorController.exception.BoardAppIncorrectStateException;
-import com.example.board.rest.errorController.exception.BoardAppPermissionViolationException;
+import com.example.board.config.locale.LocaleTranslator;
+import com.example.board.rest.errorController.exception.BoardAppException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -23,26 +17,12 @@ public class ErrorHandleController {
 
     private static final Logger log = LoggerFactory.getLogger(ErrorHandleController.class);
 
-    @ExceptionHandler(value = {
-            BoardAppIncorrectIdException.class,
-            BoardAppIncorrectRoleException.class,
-            BoardAppIncorrectEnumException.class,
-            BoardAppIncorrectStateException.class,
-            BoardAppConsistencyViolationException.class,
-            BoardAppPermissionViolationException.class,
-            IllegalArgumentException.class,
-            BoardAppExternalMicroserviceException.class
-    })
-    public ResponseEntity<ErrorResponse> handleOtherException(Exception e) {
-        String msg;
-        if (e instanceof NestedRuntimeException) {
-            msg = ((NestedRuntimeException) e).getMostSpecificCause().getMessage();
-        } else {
-            msg = e.getMessage();
-        }
-        log.warn(msg);
+    @ExceptionHandler(value = {BoardAppException.class})
+    public ResponseEntity<ErrorResponse> handleOtherException(BoardAppException e) {
+        String msg = e.getMessage();
+        log.warn(LocaleTranslator.translateForLogs(msg, e.getParams()));
         log.debug("Details:", e);
-        return new ResponseEntity<>(new ErrorResponse(msg), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponse(LocaleTranslator.translate(msg, e.getParams())), HttpStatus.BAD_REQUEST);
     }
 
 }

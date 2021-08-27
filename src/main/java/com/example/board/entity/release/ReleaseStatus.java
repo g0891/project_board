@@ -11,7 +11,7 @@ public enum ReleaseStatus {
         CLOSED;
 
         @JsonCreator
-        public static ReleaseStatus create(String providedStatus) throws BoardAppIncorrectEnumException {
+        public static ReleaseStatus create(String providedStatus) {
                 if (providedStatus == null) {
                         throw new BoardAppIncorrectEnumException("NULL", ReleaseStatus.class);
                 }

@@ -26,11 +26,11 @@ public class StorageServiceImpl implements StorageService {
             try {
                 Files.createDirectories(storageLocation);
             } catch (IOException e) {
-                throw new BoardAppStorageException(String.format("Can't create temporary storage directory %s", path));
+                throw new BoardAppStorageException("BoardAppStorageException.directoryCreation", path);
             }
         } else {
             if (!Files.isDirectory(storageLocation)) {
-                throw new BoardAppStorageException(String.format("%s already exists and it's not a directory.", path));
+                throw new BoardAppStorageException("BoardAppStorageException.notDirectory", path);
             }
         }
         initialized = true;
@@ -39,23 +39,21 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public String store(MultipartFile file) {
         if (!initialized) {
-            throw new BoardAppStorageException("Can't store temporary files.");
+            throw new BoardAppStorageException("BoardAppStorageException.storageNotInitialized");
         }
 
         if (file == null) {
-            throw new BoardAppStorageException("File expected but null provided.");
+            throw new BoardAppStorageException("BoardAppStorageException.noFile");
         }
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if (file.isEmpty()) {
-                throw new BoardAppStorageException("Failed to store empty file " + filename);
+                throw new BoardAppStorageException("BoardAppStorageException.emptyFile", filename);
             }
             if (filename.contains("..")) {
                 // This is a security check
-                throw new BoardAppStorageException(
-                        "Cannot store file with relative path outside current directory "
-                                + filename);
+                throw new BoardAppStorageException("BoardAppStorageException.relativePath", filename);
             }
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, this.storageLocation.resolve(filename),
@@ -64,7 +62,7 @@ public class StorageServiceImpl implements StorageService {
         }
         catch (IOException e) {
             e.printStackTrace();
-            throw new BoardAppStorageException("Failed to store file " + filename, e);
+            throw new BoardAppStorageException("BoardAppStorageException.storageError", filename, e);
         }
 
         return storageLocation.resolve(filename).toString();
